@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "Proyecto3DArturo-Jorge.slnx"
+    "dotnet.defaultSolution": "Proyecto3D_Arturo-Jorge.slnx"
 }
