@@ -1,11 +1,11 @@
 public abstract class StatusEffect
 {
-    protected PlayableCharacter owner;
-    protected int remainingTurns;
+    protected Combatant owner;
+    public int remainingTurns;
 
     public bool IsExpired => remainingTurns <= 0;
 
-    public void Apply(PlayableCharacter target, int turns)
+    public void Apply(Combatant target, int turns)
     {
         owner = target;
         remainingTurns = turns;

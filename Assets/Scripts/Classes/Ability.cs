@@ -1,21 +1,54 @@
 using UnityEngine;
 
-public class Ability : MonoBehaviour
+[CreateAssetMenu(fileName = "NewAbility", menuName = "RPGFari/Ability")]
+public class Ability : ScriptableObject
 {
     public string name;
     public int damage;
     public AttackType type;
+    public AttackTarget target;
     public Element element;
+    public StatusEffectData statusEffect;
+    public QTEPattern qtePattern;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    
+    public void Apply(Combatant attacker, Combatant target, float multiplier)
     {
-        
-    }
+        int value = damage;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Multiplicador elemental
+        float elementMultiplier =
+            ElementChart.GetMultiplier(element, target.element);
+
+        float finalMultiplier = multiplier * elementMultiplier;
+
+        if (damage > 0)
+        {
+            value += attacker.strength;
+
+            if (attacker.weapon != null)
+                value += attacker.weapon.damage;
+
+            target.health -= Mathf.RoundToInt(value * finalMultiplier);
+
+            if (target.health <= 0)
+            {
+                // target.health = 0;
+                target.dead = true;
+            }
+        }
+        else if (damage < 0)
+        {
+            target.health += Mathf.RoundToInt(value * finalMultiplier);
+
+            if (target.health > target.maxHealth)
+                target.health = target.maxHealth;
+        }
+
+        if (statusEffect != null)
+        {
+            StatusEffect effectInstance = statusEffect.CreateEffect();
+            target.AddEffect(effectInstance, statusEffect.duration);
+        }
     }
 }
