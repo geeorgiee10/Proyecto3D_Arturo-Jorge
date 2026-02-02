@@ -35,13 +35,15 @@ public class TurnManager : MonoBehaviour
 
     [Header("Turn Data")]
     [SerializeField] private Ability selectedAbility;
-    [SerializeField] private Combatant selectedTarget;
+    [SerializeField] private List<Combatant> selectedTargets;
 
     void Awake()
     {
         chooseTargetPanel.SetActive(false);
         qtePanel.SetActive(false);
         combatants = new List<Combatant>();
+        
+        selectedTargets = new List<Combatant>();
     }
 
     public void AddCombatant(Combatant pc)
@@ -104,7 +106,10 @@ public class TurnManager : MonoBehaviour
 
             txtTurnTitle.text = "Turno de "+combatant.name;
             selectedAbility = ChooseRandomAbility(combatant);
-            selectedTarget = GetRandomHero();
+            if(selectedAbility.target == AttackTarget.Ally)
+                selectedTargets.Add(GetRandomEnemy());
+            else if(selectedAbility.target == AttackTarget.Enemy)
+                selectedTargets.Add(GetRandomHero());
 
             StartCoroutine(ShowAttack());
         }
@@ -144,6 +149,7 @@ public class TurnManager : MonoBehaviour
         }
     }
 
+    #region WIP METER OBJETIVOS
     public void ShowConfirmation()
     {
         chooseTargetPanel.SetActive(true);
@@ -154,8 +160,11 @@ public class TurnManager : MonoBehaviour
         
         GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
         TargetButton btn = btnObj.GetComponent<TargetButton>();
+
+        //AQUÍ SE DEBE DE AÑADIR TODOS LOS OBJETIVOS DEL ATAQUE
         btn.Init(null, this, "Confirmar");
     }
+    #endregion
 
     private void SelectAttack()
     {
@@ -191,7 +200,7 @@ public class TurnManager : MonoBehaviour
 
     public void SelectTarget(Combatant c)
     {
-        selectedTarget = c;
+        selectedTargets.Add(c);
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
         qtePanel.SetActive(true);
@@ -207,12 +216,12 @@ public class TurnManager : MonoBehaviour
         Combatant combatant = combatants[currentIndex];
         
         string actionText = combatant.name + " hace un ataque " +
-                            ElementChart.GetText(combatant.element, selectedTarget.element)+" a " +
-                            selectedTarget.name;
+                            ElementChart.GetText(combatant.element, selectedTargets[0].element)+" a " +
+                            selectedTargets[0].name;
         txtTurnTitle.text = actionText;
 
         yield return new WaitForSeconds(2f);
-        selectedTarget.GetHit(combatant);
+        selectedTargets[0].GetHit(combatant);
     }
 
     IEnumerator ShowAttack()
@@ -221,7 +230,7 @@ public class TurnManager : MonoBehaviour
 
         string actionText = combatant.name + " usa " +
                             selectedAbility.name + " contra " +
-                            (selectedTarget != null ? selectedTarget.name : "todos los adversarios");
+                            (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los adversarios");
         txtTurnTitle.text = actionText;
 
         float multiplier = 1f;
@@ -247,10 +256,11 @@ public class TurnManager : MonoBehaviour
         }
 
         // Enemigos y jugador aplican daño aquí
-        selectedAbility.Apply(combatant, selectedTarget, multiplier);
+        foreach(Combatant c in selectedTargets)
+            selectedAbility.Apply(combatant, c, multiplier);
 
         selectedAbility = null;
-        selectedTarget = null;
+        selectedTargets = new List<Combatant>();
 
         if (!CheckBattleEnd())
             EndTurn();
@@ -307,4 +317,5 @@ public class TurnManager : MonoBehaviour
     private Ability ChooseRandomAbility(Combatant enemy) => enemy.GetAbilities()[Random.Range(0, enemy.GetAbilities().Length)];
 
     private Combatant GetRandomHero() => GetHeroes()[Random.Range(0, GetHeroes().Count)];
+    private Combatant GetRandomEnemy() => GetEnemies()[Random.Range(0, GetEnemies().Count)];
 }

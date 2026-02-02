@@ -22,27 +22,23 @@ public class Combatant : MonoBehaviour
     public Ability[] abilities;
     
 
-    private List<StatusEffect> activeEffects = new();
+    public List<StatusEffect> activeEffects = new();
 
-    public void AddEffect(StatusEffect effect, int turns)
+    public void AddEffect(StatusEffect effect)
     {
-        effect.Apply(this, turns);
         activeEffects.Add(effect);
-    }
-
-    public void StartTurn()
-    {
-        foreach (var effect in activeEffects)
-            effect.OnTurnStart();
     }
 
     public void EndTurn()
     {
         for (int i = activeEffects.Count - 1; i >= 0; i--)
         {
-            activeEffects[i].OnTurnEnd();
-            if (activeEffects[i].IsExpired)
+            activeEffects[i].remainingTurns--;
+
+            if (activeEffects[i].remainingTurns <= 0)
+            {
                 activeEffects.RemoveAt(i);
+            }
         }
     }
 

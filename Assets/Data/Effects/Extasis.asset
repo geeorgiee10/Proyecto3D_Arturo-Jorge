@@ -9,6 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41b86569866511846ac4f80514430507, type: 3}
-  m_Name: Guitarra Macabra
-  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  m_Script: {fileID: 11500000, guid: 68f849a25a484e145891831ee123e2c6, type: 3}
+  m_Name: Extasis
+  m_EditorClassIdentifier: Assembly-CSharp::StatusEffect
+  remainingTurns: 2
+  effect: 6

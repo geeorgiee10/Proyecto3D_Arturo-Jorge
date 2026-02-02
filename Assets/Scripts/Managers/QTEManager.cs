@@ -15,7 +15,6 @@ public class QTEManager : MonoBehaviour
     private List<BeatUI> beats = new();
     private int currentBeatIndex = 0;
 
-    // Contadores públicos de solo lectura
     public int PerfectCount { get; private set; }
     public int GoodCount { get; private set; }
     public int MissCount { get; private set; }
@@ -25,7 +24,6 @@ public class QTEManager : MonoBehaviour
         beats.Clear();
         currentBeatIndex = 0;
 
-        // Reiniciamos contadores
         PerfectCount = 0;
         GoodCount = 0;
         MissCount = 0;

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Acorde Mayor
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: Acorde Mayor
-  damage: -15
+  damage: -10
   type: 2
   target: 3
   element: 2
-  statusEffect: {fileID: 0}
+  statusEffect: {fileID: 11400000, guid: 1706aea503b28504896187156e975762, type: 2}
+  qtePattern: {fileID: 0}

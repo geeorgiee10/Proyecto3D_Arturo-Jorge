@@ -8,7 +8,7 @@ public class Ability : ScriptableObject
     public AttackType type;
     public AttackTarget target;
     public Element element;
-    public StatusEffectData statusEffect;
+    public StatusEffect statusEffect;
     public QTEPattern qtePattern;
 
     
@@ -45,10 +45,6 @@ public class Ability : ScriptableObject
                 target.health = target.maxHealth;
         }
 
-        if (statusEffect != null)
-        {
-            StatusEffect effectInstance = statusEffect.CreateEffect();
-            target.AddEffect(effectInstance, statusEffect.duration);
-        }
+        if(statusEffect != null) target.AddEffect(statusEffect);
     }
 }

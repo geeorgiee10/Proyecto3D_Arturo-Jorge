@@ -17,5 +17,5 @@ MonoBehaviour:
   type: 2
   target: 0
   element: 1
-  statusEffect: {fileID: 0}
+  statusEffect: {fileID: 11400000, guid: e19184f99294ec64ab4d14e8e5038ff5, type: 2}
   qtePattern: {fileID: 11400000, guid: 8a84dff36d788964b9785008c0023e65, type: 2}
