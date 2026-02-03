@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "NewEffect", menuName = "RPGFari/Status_Effects")]
 public class StatusEffect : ScriptableObject
 {
     public int remainingTurns;
     public Effect effect;
+    public Sprite icon;
 }
 
 

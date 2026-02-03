@@ -19,8 +19,11 @@ public class QTEManager : MonoBehaviour
     public int GoodCount { get; private set; }
     public int MissCount { get; private set; }
 
+    private int beatPoints = 0;
+
     public void ShowBeats(QTEPattern pattern)
     {
+        beatPoints = 0;
         beats.Clear();
         currentBeatIndex = 0;
 
@@ -29,7 +32,7 @@ public class QTEManager : MonoBehaviour
         MissCount = 0;
 
         float timelineSize = timeline.sizeDelta.x;
-        int beatPoints = pattern.sequence.Length + 1;
+        beatPoints = pattern.sequence.Length + 1;
 
         float spacing = timelineSize / beatPoints;
         float lastPosition = spacing - (timelineSize / 2f);
@@ -114,7 +117,7 @@ public class QTEManager : MonoBehaviour
 
         while (progressBar.anchoredPosition.x < right)
         {
-            progressBar.anchoredPosition += Vector2.right * progressBarSpeed * Time.deltaTime;
+            progressBar.anchoredPosition += Vector2.right * ((6*progressBarSpeed)/beatPoints) * Time.deltaTime;
             float currentX = progressBar.anchoredPosition.x;
 
             CheckBeats(previousX, currentX);

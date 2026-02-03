@@ -108,8 +108,14 @@ public class TurnManager : MonoBehaviour
             selectedAbility = ChooseRandomAbility(combatant);
             if(selectedAbility.target == AttackTarget.Ally)
                 selectedTargets.Add(GetRandomEnemy());
+            else if(selectedAbility.target == AttackTarget.AllyTeam)
+                foreach(Combatant c in GetEnemies())
+                    selectedTargets.Add(c);
             else if(selectedAbility.target == AttackTarget.Enemy)
                 selectedTargets.Add(GetRandomHero());
+            else if(selectedAbility.target == AttackTarget.EnemyTeam)
+                foreach(Combatant c in GetHeroes())
+                    selectedTargets.Add(c);
 
             StartCoroutine(ShowAttack());
         }
@@ -136,7 +142,6 @@ public class TurnManager : MonoBehaviour
 
         foreach (Combatant target in targets)
         {
-            if(target == combatants[currentIndex]) return;
             if(target.dead) return;
 
             GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
@@ -149,7 +154,6 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    #region WIP METER OBJETIVOS
     public void ShowConfirmation()
     {
         chooseTargetPanel.SetActive(true);
@@ -161,10 +165,8 @@ public class TurnManager : MonoBehaviour
         GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
         TargetButton btn = btnObj.GetComponent<TargetButton>();
 
-        //AQUÍ SE DEBE DE AÑADIR TODOS LOS OBJETIVOS DEL ATAQUE
         btn.Init(null, this, "Confirmar");
     }
-    #endregion
 
     private void SelectAttack()
     {
@@ -187,7 +189,7 @@ public class TurnManager : MonoBehaviour
         chooseTargetPanel.SetActive(true);
         qtePanel.SetActive(false);
         btnCancelAbility.onClick.AddListener(() => CancelAbility());
-        if (a.target == AttackTarget.EnemyTeam || a.target == AttackTarget.AllyTeam || a.target == AttackTarget.Self)
+        if (a.target == AttackTarget.EnemyTeam || a.target == AttackTarget.AllyTeam)
             ShowConfirmation();
         else if (a.target == AttackTarget.Ally)
             ShowTargetSelection(GetHeroes());
@@ -235,7 +237,6 @@ public class TurnManager : MonoBehaviour
 
         float multiplier = 1f;
 
-        // 🧠 SOLO el jugador usa QTE
         if (!combatant.isEnemy)
         {
             qteManager.ShowBeats(selectedAbility.qtePattern);
@@ -255,7 +256,6 @@ public class TurnManager : MonoBehaviour
             yield return new WaitForSeconds(2.5f);
         }
 
-        // Enemigos y jugador aplican daño aquí
         foreach(Combatant c in selectedTargets)
             selectedAbility.Apply(combatant, c, multiplier);
 

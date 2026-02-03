@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffect
   remainingTurns: 3
   effect: 5
+  icon: {fileID: 21300000, guid: e9dcea77c7b95cb4590922209263dd39, type: 3}
