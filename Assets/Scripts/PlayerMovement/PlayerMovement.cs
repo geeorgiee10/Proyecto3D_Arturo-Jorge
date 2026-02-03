@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+    public static PlayerMovement Instance;
+
     [Header("Movimiento")]
         public float moveSpeed = 40f;
         public float sprintSpeed = 1.8f;
@@ -31,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
         
         private bool runPress;
+        public bool canMove = true;
 
 
         
@@ -38,17 +42,26 @@ public class PlayerMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Instance = this;
+
         characterController = GetComponent<CharacterController>();
         currentSpeed = moveSpeed;
     }
 
     private void OnMove(InputValue value)
     {
+        if (!canMove) 
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
         moveInput = value.Get<Vector2>();
     }
 
     private void OnJump(InputValue value)
     {
+        if (!canMove) return;
+
         if(value.isPressed)
         {
             jumpRequested = true;
@@ -73,6 +86,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!canMove)
+        {
+            animator.SetFloat("VerticalVelocity", 0);
+            return;
+        }
+
         if(characterController == null)
             return; 
 
@@ -86,6 +105,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void StepsSound()
     {
+        if (!canMove)
+        {
+            if (audioSourceSteps != null && audioSourceSteps.isPlaying)
+                audioSourceSteps.Stop();
+            return;
+        }
+
         if(audioSourceSteps == null)
             return;
         
