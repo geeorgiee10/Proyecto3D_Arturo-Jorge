@@ -23,6 +23,7 @@ public class NPCDialogue : MonoBehaviour
 
         if (!dialogueStarted && keyboard.eKey.wasPressedThisFrame)
         {
+            TalkIndicator.Instance.Hide();
             DialogueManager.Instance.StartDialogue(dialogue);
             dialogueStarted = true;
         }
@@ -33,6 +34,9 @@ public class NPCDialogue : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             playerInRange = true;
+
+            if (!DialogueManager.Instance.dialoguePanel.activeSelf)
+                TalkIndicator.Instance.Show();
         }
     }
 
@@ -42,6 +46,8 @@ public class NPCDialogue : MonoBehaviour
         {
             playerInRange = false;
             dialogueStarted = false; 
+
+            TalkIndicator.Instance.Hide();
         }
     }
 }

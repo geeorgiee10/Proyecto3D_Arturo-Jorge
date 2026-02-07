@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using System.Collections;
+using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -11,10 +13,17 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI npcNameText;
     public TextMeshProUGUI dialogueText;
 
+    
+    [Header("Texto")]
+        public float typingSpeed = 0.04f;
+
     private string[] lines;
     private int index;
     private bool dialogueActive;
     private bool justStarted;
+
+    private Coroutine typingCoroutine;
+    private bool isTyping;
 
     
     private Keyboard keyboard;
@@ -44,7 +53,16 @@ public class DialogueManager : MonoBehaviour
 
         if (keyboard.eKey.wasPressedThisFrame)
         {
-            NextLine();
+            if (isTyping)
+            {
+                StopCoroutine(typingCoroutine);
+                dialogueText.text = lines[index];
+                isTyping = false;
+            }
+            else
+            {
+                NextLine();
+            }
         }
     }
 
@@ -59,7 +77,7 @@ public class DialogueManager : MonoBehaviour
         lines = dialogue.lines;
         index = 0;
 
-        dialogueText.text = lines[index];
+        StartTypingLine(lines[index]);
 
         PlayerMovement.Instance.canMove = false;
     }
@@ -70,12 +88,34 @@ public class DialogueManager : MonoBehaviour
 
         if (index < lines.Length)
         {
-            dialogueText.text = lines[index];
+            StartTypingLine(lines[index]);
         }
         else
         {
             EndDialogue();
         }
+    }
+
+    void StartTypingLine(string line)
+    {
+        if(typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
+        typingCoroutine = StartCoroutine(TypeLine(line));
+    }
+
+    IEnumerator TypeLine(string line)
+    {
+        isTyping = true;
+        dialogueText.text = "";
+
+        foreach (char letter in line)
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        isTyping = false;
     }
 
     void EndDialogue()
