@@ -10,6 +10,7 @@ public class Bag : MonoBehaviour
 
     void Awake()
     {
+
         if (Instance == null)
         {
             Instance = this;

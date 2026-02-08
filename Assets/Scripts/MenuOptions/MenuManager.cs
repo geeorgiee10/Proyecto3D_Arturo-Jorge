@@ -20,9 +20,14 @@ public class MenuManager : MonoBehaviour
     private Vector3 hiddenPos;
     private Vector3 visiblePos;
 
+    public GameObject bagUI;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        bagUI.SetActive(false);
+
         keyboard = Keyboard.current;
 
        
@@ -76,6 +81,14 @@ public class MenuManager : MonoBehaviour
         {
             SelectOption();
         }
+
+
+        if (bagUI.activeSelf && keyboard.escapeKey.wasPressedThisFrame)
+        {
+            bagUI.SetActive(false);
+            menuPanel.SetActive(true);
+            return;
+        }
     }
 
     void UpdateSelection()
@@ -97,8 +110,8 @@ public class MenuManager : MonoBehaviour
         // Lógica de cada opción
         switch(choice)
         {
-            case "Bag":
-                // Abrir mochila
+            case "Mochila":
+                OpenBag();
                 break;
             case "Controls":
                 // Mostrar controles
@@ -107,6 +120,21 @@ public class MenuManager : MonoBehaviour
                 // Volver menu inicial
                 break;
         }
+    }
+
+
+
+    void OpenBag()
+    {
+         Debug.Log("Abriendo mochila");
+        bagUI.SetActive(true);
+        //menuPanel.SetActive(false);
+    }
+
+    void CloseBag()
+    {
+        bagUI.SetActive(false);
+        //menuPanel.SetActive(true);
     }
 
     IEnumerator ShowMenu()

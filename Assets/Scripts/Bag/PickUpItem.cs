@@ -23,8 +23,8 @@ public class PickUpItem : MonoBehaviour
 
         if (keyboard.bKey.wasPressedThisFrame)
         {
-            ObjectIndicator.Instance.Hide();    
-            Bag.Instance.AddItem(item);          
+            ObjectIndicator.Instance.Hide();
+            Bag.Instance.AddItem(item);    
             itemPickedUp = true;                 
             Destroy(gameObject);                 
         }
