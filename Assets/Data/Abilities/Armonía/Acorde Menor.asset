@@ -19,3 +19,4 @@ MonoBehaviour:
   element: 2
   statusEffect: {fileID: 0}
   qtePattern: {fileID: 11400000, guid: 4137679a343a4f241b3ddecf58b33410, type: 2}
+  cost: 3

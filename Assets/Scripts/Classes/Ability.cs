@@ -10,6 +10,7 @@ public class Ability : ScriptableObject
     public Element element;
     public StatusEffect statusEffect;
     public QTEPattern qtePattern;
+    public int cost;
 
     
     public void Apply(Combatant attacker, Combatant target, float multiplier)

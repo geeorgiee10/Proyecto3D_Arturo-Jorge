@@ -56,7 +56,10 @@ public class TurnManager : MonoBehaviour
         List<int> die = Utils.GetRandomPermutation(combatants.Count);
 
         for(int i = 0; i < combatants.Count; i++)
+        {
             combatants[i].AddInitiative(die[i]);
+            combatants[i].abilityPoints = 3;
+        }
 
         StartRound();
     }
@@ -93,7 +96,7 @@ public class TurnManager : MonoBehaviour
             txtAbility1.text = combatant.GetAbility1().name;
             txtAbility2.text = combatant.GetAbility2().name;
 
-            btnAbility1.onClick.AddListener(() => SelectAttack());
+            btnBasicAttack.onClick.AddListener(() => SelectAttack());
             btnAbility1.onClick.AddListener(() => SelectAbility(combatant.GetAbility1()));
             btnAbility2.onClick.AddListener(() => SelectAbility(combatant.GetAbility2()));
         }
@@ -117,7 +120,7 @@ public class TurnManager : MonoBehaviour
                 foreach(Combatant c in GetHeroes())
                     selectedTargets.Add(c);
 
-            StartCoroutine(ShowAttack());
+            StartCoroutine(ShowAbilityAttack());
         }
     }
 
@@ -170,6 +173,7 @@ public class TurnManager : MonoBehaviour
 
     private void SelectAttack()
     {
+        Debug.Log("PULSADO EL ATAQUE");
         btnCancelAbility.onClick.RemoveAllListeners();
         
         selectActionPanel.SetActive(false);
@@ -205,11 +209,12 @@ public class TurnManager : MonoBehaviour
         selectedTargets.Add(c);
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
-        qtePanel.SetActive(true);
         if(selectedAbility == null)
             StartCoroutine(ShowBasicAttack());
-        else
-            StartCoroutine(ShowAttack());
+        else{
+            qtePanel.SetActive(true);
+            StartCoroutine(ShowAbilityAttack());
+        }
     }
 
 
@@ -224,9 +229,17 @@ public class TurnManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         selectedTargets[0].GetHit(combatant);
+        
+        selectedAbility = null;
+        selectedTargets = new List<Combatant>();
+        combatant.abilityPoints += 2;
+
+        yield return new WaitForSeconds(.5f);
+        if (!CheckBattleEnd())
+            EndTurn();
     }
 
-    IEnumerator ShowAttack()
+    IEnumerator ShowAbilityAttack()
     {
         Combatant combatant = combatants[currentIndex];
 
@@ -247,6 +260,8 @@ public class TurnManager : MonoBehaviour
 
             multiplier += qteManager.PerfectCount * 0.1f;
             multiplier -= qteManager.MissCount * 0.1f;
+
+            combatant.abilityPoints += qteManager.PerfectCount / 2;
 
             yield return new WaitForSeconds(0.5f);
         }

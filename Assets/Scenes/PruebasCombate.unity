@@ -1011,6 +1011,7 @@ MonoBehaviour:
   chant: 0
   speed: 2
   initiative: 0
+  abilityPoints: 0
   isEnemy: 1
   dead: 0
   weapon: {fileID: 11400000, guid: b921b42262b948644b5d7e230a5f88a5, type: 2}
@@ -1019,7 +1020,6 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 25971e69327dcb847a9e55d22d30d11d, type: 2}
   - {fileID: 11400000, guid: ad0e5967982034e4bb203d65ca90aaba, type: 2}
-  activeEffects: []
 --- !u!1 &809240549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1327,15 +1327,15 @@ MonoBehaviour:
   chant: 0
   speed: 10
   initiative: 0
+  abilityPoints: 0
   isEnemy: 0
   dead: 0
-  weapon: {fileID: 11400000, guid: 5d1d3b4864f16994bb4d139332d2d3cc, type: 2}
+  weapon: {fileID: 11400000, guid: 8398e34fdbe78e543aea8bff9ddea9d8, type: 2}
   element: 1
   team: 0
   abilities:
   - {fileID: 11400000, guid: e135d9e76d715984eb1478d641aba82c, type: 2}
   - {fileID: 11400000, guid: a32335c62a1377a45ba901cf3e7ae78d, type: 2}
-  activeEffects: []
 --- !u!1 &1020333786
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,6 +1388,7 @@ MonoBehaviour:
   chant: 0
   speed: 4
   initiative: 0
+  abilityPoints: 0
   isEnemy: 1
   dead: 0
   weapon: {fileID: 11400000, guid: b56b09e0d7c157c40b45cb6f24cd1635, type: 2}
@@ -1396,7 +1397,6 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 3869b6d9e4c2b174f8bee115dc002fd1, type: 2}
   - {fileID: 11400000, guid: 34d426754eb71cc4c9fac075950a4447, type: 2}
-  activeEffects: []
 --- !u!1 &1028046009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1648,143 +1648,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!1 &1059014988
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1059014989}
-  - component: {fileID: 1059014991}
-  - component: {fileID: 1059014990}
-  m_Layer: 5
-  m_Name: txtHealths
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1059014989
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059014988}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1649410987}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -114.41626, y: 0}
-  m_SizeDelta: {x: 228.8325, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1059014990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059014988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: New Text
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_characterHorizontalScale: 1
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &1059014991
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059014988}
-  m_CullTransparentMesh: 1
 --- !u!1 &1099415107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1989,7 +1852,6 @@ MonoBehaviour:
   turnManager: {fileID: 413756113}
   battleCardPrefab: {fileID: 4915524461476484522, guid: 9dcd53a2897dd514686e082f06335f1f, type: 3}
   canvas: {fileID: 1649410987}
-  spacing: 120
 --- !u!4 &1250370310
 Transform:
   m_ObjectHideFlags: 0
@@ -2198,8 +2060,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -55.961914}
-  m_SizeDelta: {x: 0, y: 111.9238}
+  m_AnchoredPosition: {x: 168.9282, y: -56.37378}
+  m_SizeDelta: {x: -186.4751, y: 116.2604}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1372617494
 MonoBehaviour:
@@ -2248,8 +2110,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2366,7 +2228,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1059014989}
   - {fileID: 940642186}
   m_Father: {fileID: 1816189378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2465,6 +2326,7 @@ MonoBehaviour:
   chant: 0
   speed: 5
   initiative: 0
+  abilityPoints: 0
   isEnemy: 0
   dead: 0
   weapon: {fileID: 11400000, guid: 06da51fe07888e84fa31d9f5221ec61e, type: 2}
@@ -2473,7 +2335,6 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 00f0043e168bdd3489e220d596fecd5f, type: 2}
   - {fileID: 11400000, guid: 3207b036d142c134394000f4f46ccb7f, type: 2}
-  activeEffects: []
 --- !u!1 &1742202797
 GameObject:
   m_ObjectHideFlags: 0

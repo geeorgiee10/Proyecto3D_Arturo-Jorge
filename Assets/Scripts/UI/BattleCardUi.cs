@@ -11,6 +11,8 @@ public class BattleCardUi : MonoBehaviour
     [SerializeField] TextMeshProUGUI txtName;
     [SerializeField] Image[] imgIcons;
 
+    [SerializeField] Image[] imgAP;
+    [SerializeField] TextMeshProUGUI txtAP;
 
     private Dictionary<Effect, string> colors = new Dictionary<Effect, string>()
     {
@@ -32,6 +34,7 @@ public class BattleCardUi : MonoBehaviour
     {
         txtName.text = combatant.name;
         txtHealth.text = combatant.health + "/" + combatant.maxHealth;
+        txtAP.text = ""+combatant.abilityPoints;
 
         float targetFill = (float)combatant.health / combatant.maxHealth;
 
@@ -70,6 +73,22 @@ public class BattleCardUi : MonoBehaviour
             }
 
             ite++;
+        }
+
+        foreach(Image i in imgAP)
+            i.color = new Color(1, 1, 1, 0);
+
+        for(int i = 0; i < imgAP.Length; i++)
+        {
+            if(i+1 <= combatant.abilityPoints)
+                imgAP[i].color = new Color(0, 1, 1, 1);
+        }
+
+        if(combatant.team == Team.Enemy)
+        {
+            foreach(Image i in imgAP)
+                i.color = new Color(1, 1, 1, 0);
+            txtAP.text = "";
         }
     }
 }

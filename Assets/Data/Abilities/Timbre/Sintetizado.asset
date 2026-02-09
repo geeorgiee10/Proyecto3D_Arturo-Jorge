@@ -18,3 +18,5 @@ MonoBehaviour:
   target: 0
   element: 3
   statusEffect: {fileID: 0}
+  qtePattern: {fileID: 0}
+  cost: 3

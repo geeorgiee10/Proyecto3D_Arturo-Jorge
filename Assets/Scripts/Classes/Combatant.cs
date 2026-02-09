@@ -10,6 +10,7 @@ public class Combatant : MonoBehaviour
     public int chant;
     public int speed;
     public int initiative;
+    public int abilityPoints;
 
     public bool isEnemy;
     public bool dead = false;
