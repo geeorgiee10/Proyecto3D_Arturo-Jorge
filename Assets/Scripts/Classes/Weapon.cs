@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewWeapon", menuName = "RPGFari/Weapon")]
 public class Weapon : ScriptableObject
 {
-    private string name;
-    private int damage;
-    private Element element;
+    public string name;
+    public int damage;
+    public Element element;
 }
