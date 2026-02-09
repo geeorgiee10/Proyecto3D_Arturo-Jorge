@@ -182,35 +182,21 @@ public class BagUI : MonoBehaviour
 
     void EquipItem(BagItemUI itemUI)
     {
-        if(weaponsSelected)
+        if (weaponsSelected)
         {
-            ItemSO weaponToEquip = Bag.Instance.GetItems().Find(item => item.itemName == itemUI.text.text);
-            if (weaponToEquip != null)
-            {
-                PlayerEquipment.Instance.EquipWeapon(weaponToEquip);
-                Debug.Log("Equipped Weapon: " + itemUI.text.text);
-            }
+            ItemSO weapon = Bag.Instance.GetItems().Find(i => i.itemName == itemUI.text.text);
+
+            if (weapon != null)
+                EquipmentManager.Instance.EquipWeapon(weapon);
         }
         else
         {
-            ItemSO abilityToEquip = Bag.Instance.GetAbilities().Find(item => item.itemName == itemUI.text.text);
+            ItemSO ability = Bag.Instance.GetAbilities().Find(i => i.itemName == itemUI.text.text);
 
-            if (abilityToEquip != null)
-            {
-                // Equip ability in the next slot
-                PlayerEquipment.Instance.EquipAbility(abilityToEquip, nextAbilitySlot);
-                Debug.Log("Equipped Ability: " + itemUI.text.text + " en slot " + nextAbilitySlot);
-
-                // Move to the next slot for the next ability
-                nextAbilitySlot++;
-                if (nextAbilitySlot >= PlayerEquipment.Instance.equippedAbilities.Length)
-                {
-                    nextAbilitySlot = 0;
-                }
-            }
+            if (ability != null)
+                EquipmentManager.Instance.EquipAbility(ability);
         }
     }
-
     void UpdateSubmenuSelection()
     {
         optionEquip.color = submenuIndex == 0 ? Color.yellow : Color.white;

@@ -6,4 +6,5 @@ public class ItemSO : ScriptableObject
     public string itemName;
     public string description;
     public CollectibleType type;
+    public Element element;
 }
