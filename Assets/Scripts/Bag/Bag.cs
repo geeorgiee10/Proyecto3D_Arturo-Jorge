@@ -7,6 +7,8 @@ public class Bag : MonoBehaviour
 
     private List<ItemSO> items = new List<ItemSO>();
 
+    private List<ItemSO> abilities = new List<ItemSO>();
+
 
     void Awake()
     {
@@ -23,8 +25,16 @@ public class Bag : MonoBehaviour
 
     public void AddItem(ItemSO item)
     {
-        items.Add(item);
-        Debug.Log("Objeto añadido: " + item.itemName);
+        switch (item.type)
+        {
+            case CollectibleType.Weapon:
+                items.Add(item);
+                break;
+
+            case CollectibleType.Ability:
+                abilities.Add(item);
+                break;
+        }
     }
 
     public bool HasItem(ItemSO item)
@@ -44,6 +54,11 @@ public class Bag : MonoBehaviour
     public List<ItemSO> GetItems()
     {
         return items;
+    }
+
+    public List<ItemSO> GetAbilities()
+    {
+        return abilities;
     }
 
 }

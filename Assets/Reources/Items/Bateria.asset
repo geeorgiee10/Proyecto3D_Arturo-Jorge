@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Bateria
   description: La bateria de cristo
-  stackable: 1
+  type: 1

@@ -5,5 +5,5 @@ public class ItemSO : ScriptableObject
 {
     public string itemName;
     public string description;
-    public bool stackable;
+    public CollectibleType type;
 }

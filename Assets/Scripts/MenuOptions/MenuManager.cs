@@ -63,13 +63,13 @@ public class MenuManager : MonoBehaviour
         if(!menuActive) return;
 
         // Navegar opciones
-        /*if(keyboard.tabKey.wasPressedThisFrame)
+        if(keyboard.wKey.wasPressedThisFrame)
         {
             selectedIndex--;
             if(selectedIndex < 0) selectedIndex = options.Count - 1;
             UpdateSelection();
-        }*/
-        if(keyboard.tabKey.wasPressedThisFrame)
+        }
+        if(keyboard.sKey.wasPressedThisFrame)
         {
             selectedIndex++;
             if(selectedIndex >= options.Count) selectedIndex = 0;
@@ -126,19 +126,21 @@ public class MenuManager : MonoBehaviour
 
     void OpenBag()
     {
-         Debug.Log("Abriendo mochila");
+        PlayerMovement.Instance.canMove = false;
         bagUI.SetActive(true);
         //menuPanel.SetActive(false);
     }
 
     void CloseBag()
     {
+        PlayerMovement.Instance.canMove = true;
         bagUI.SetActive(false);
         //menuPanel.SetActive(true);
     }
 
     IEnumerator ShowMenu()
     {
+        PlayerMovement.Instance.canMove = false;
         menuActive = true;
         menuPanel.SetActive(true);
         while(Vector3.Distance(menuPanel.transform.localPosition, visiblePos) > 0.1f)
@@ -151,6 +153,7 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator HideMenu()
     {
+        PlayerMovement.Instance.canMove = true;
         while(Vector3.Distance(menuPanel.transform.localPosition, hiddenPos) > 0.1f)
         {
             menuPanel.transform.localPosition = Vector3.MoveTowards(menuPanel.transform.localPosition, hiddenPos, slideSpeed * Time.deltaTime);
