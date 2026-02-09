@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class MenuManager : MonoBehaviour
 {
 
+    public static MenuManager Instance;
+
     public GameObject menuPanel;
     public Transform optionsContainer;
     private List<TextMeshProUGUI> options = new List<TextMeshProUGUI>();
@@ -21,6 +23,21 @@ public class MenuManager : MonoBehaviour
     private Vector3 visiblePos;
 
     public GameObject bagUI;
+
+    public bool SubMenuUsing = false;
+
+    void Awake()
+    {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -52,7 +69,7 @@ public class MenuManager : MonoBehaviour
          if(keyboard == null) return;
 
         // Abrir/cerrar menú
-        if(keyboard.escapeKey.wasPressedThisFrame)
+        if(keyboard.escapeKey.wasPressedThisFrame && !SubMenuUsing)
         {
             if(menuActive)
                 StartCoroutine(HideMenu());
@@ -77,13 +94,13 @@ public class MenuManager : MonoBehaviour
         }
 
         // Seleccionar opción
-        if(keyboard.enterKey.wasPressedThisFrame)
+        if(keyboard.enterKey.wasPressedThisFrame && !SubMenuUsing)
         {
             SelectOption();
         }
 
 
-        if (bagUI.activeSelf && keyboard.escapeKey.wasPressedThisFrame)
+        if (bagUI.activeSelf && keyboard.escapeKey.wasPressedThisFrame && !SubMenuUsing)
         {
             bagUI.SetActive(false);
             menuPanel.SetActive(true);

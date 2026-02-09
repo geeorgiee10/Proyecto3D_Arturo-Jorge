@@ -7,12 +7,23 @@ using System.Collections;
 public class BagUI : MonoBehaviour
 {
 
-    public GameObject itemTextPrefab;
+    public GameObject itemPrefab;
     public Transform itemsContainer;
     public Transform abilitiesContainer;
 
-    private List<TextMeshProUGUI> weaponTexts = new ();
-    private List<TextMeshProUGUI> abilityTexts = new ();
+    public GameObject submenuUI;
+    public TextMeshProUGUI submenuText;
+    public TextMeshProUGUI optionEquip; 
+    public TextMeshProUGUI optionCancel;
+    private int submenuIndex = 0; 
+    private bool submenuOpen = false;
+    private BagItemUI currentSelectedItem;
+
+    private int nextAbilitySlot = 0;
+
+    private List<BagItemUI> weaponItems = new ();
+    private List<BagItemUI> abilityItems = new ();
+    
 
     private int selectedIndex = 0;
     private bool weaponsSelected = true;
@@ -22,6 +33,7 @@ public class BagUI : MonoBehaviour
     void OnEnable()
     {
         keyboard = Keyboard.current;
+        submenuUI.SetActive(false);
         StartCoroutine(RefreshNextFrame());
     }
 
@@ -38,11 +50,11 @@ public class BagUI : MonoBehaviour
 
     public void Refresh()
     {
-        ClearContainer(itemsContainer, weaponTexts);
-        ClearContainer(abilitiesContainer, abilityTexts);
+        ClearContainer(itemsContainer, weaponItems);
+        ClearContainer(abilitiesContainer, abilityItems);
 
-        SpawnItems(Bag.Instance.GetItems(), itemsContainer, weaponTexts);
-        SpawnItems(Bag.Instance.GetAbilities(), abilitiesContainer, abilityTexts);
+        SpawnItems(Bag.Instance.GetItems(), itemsContainer, weaponItems);
+        SpawnItems(Bag.Instance.GetAbilities(), abilitiesContainer, abilityItems);
 
         selectedIndex = 0;
         weaponsSelected = true;
@@ -50,21 +62,21 @@ public class BagUI : MonoBehaviour
 
     }
 
-    void ClearContainer(Transform container, List<TextMeshProUGUI> list)
+    void ClearContainer(Transform container, List<BagItemUI> list)
     {
         foreach (Transform child in container)
             Destroy(child.gameObject);
         list.Clear();
     }
 
-    void SpawnItems(List<ItemSO> items, Transform container, List<TextMeshProUGUI> list)
+    void SpawnItems(List<ItemSO> items, Transform container, List<BagItemUI> list)
     {
         foreach (ItemSO item in items)
         {
-            GameObject go = Instantiate(itemTextPrefab, container);
-            TextMeshProUGUI tmp = go.GetComponent<TextMeshProUGUI>();
-            tmp.text = item.itemName;
-            list.Add(tmp);
+            GameObject go = Instantiate(itemPrefab, container);
+            BagItemUI itemUI = go.GetComponent<BagItemUI>();
+            itemUI.SetText(item.itemName);
+            list.Add(itemUI);
         }
     }
 
@@ -79,7 +91,7 @@ public class BagUI : MonoBehaviour
             selectedIndex = 0;
             UpdateSelection();
         }
-        List<TextMeshProUGUI> currentList = weaponsSelected ? weaponTexts : abilityTexts;
+        List<BagItemUI> currentList = weaponsSelected ? weaponItems : abilityItems;
 
         if(currentList.Count == 0) return;
 
@@ -98,20 +110,110 @@ public class BagUI : MonoBehaviour
                 selectedIndex = currentList.Count - 1;
             UpdateSelection();
         }
+
+        if(keyboard.spaceKey.wasPressedThisFrame && !submenuOpen)
+        {
+            if(currentList.Count > 0)
+                MenuManager.Instance.SubMenuUsing = true;
+                OpenSubmenu(currentList[selectedIndex]);
+        }
+
+        if(submenuOpen)
+        {
+            // Change submenu selection
+            if(keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)
+            {
+                submenuIndex = 1 - submenuIndex; 
+                UpdateSubmenuSelection();
+            }
+
+            // Confirm
+            if(keyboard.enterKey.wasPressedThisFrame)
+            {
+                if(submenuIndex == 0) // Equip
+                {
+                    EquipItem(currentSelectedItem);
+                }
+                CloseSubmenu();
+            }
+
+            // Cancel with Escape
+            if(keyboard.escapeKey.wasPressedThisFrame)
+            {
+                CloseSubmenu();
+            }
+            }
     }
 
     void UpdateSelection()
     {
-        Highlight(weaponTexts, weaponsSelected);
-        Highlight(abilityTexts, !weaponsSelected);
+        UpdateList(weaponItems, weaponsSelected);
+        UpdateList(abilityItems, !weaponsSelected);
     }
 
-    void Highlight(List<TextMeshProUGUI> list, bool active)
+    void UpdateList(List<BagItemUI> list, bool active)
     {
-        for(int i = 0; i < list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            list[i].color = 
-                (active && i == selectedIndex) ? Color.yellow : Color.white;
+            bool selected = active && i == selectedIndex;
+            list[i].SetSelected(selected);
         }
+    }
+
+    void OpenSubmenu(BagItemUI itemUI)
+    {
+        currentSelectedItem = itemUI;
+        submenuUI.SetActive(true);
+        submenuOpen = true;
+        submenuIndex = 0;
+
+        string itemName = itemUI.text.text; 
+        submenuText.text = $"Equipar {(weaponsSelected ? "Instrumento" : "Habilidad")}: {itemName}";
+
+        UpdateSubmenuSelection();
+    }
+
+    public void CloseSubmenu()
+    {
+        submenuUI.SetActive(false);
+        submenuOpen = false;
+        currentSelectedItem = null;
+    }
+
+    void EquipItem(BagItemUI itemUI)
+    {
+        if(weaponsSelected)
+        {
+            ItemSO weaponToEquip = Bag.Instance.GetItems().Find(item => item.itemName == itemUI.text.text);
+            if (weaponToEquip != null)
+            {
+                PlayerEquipment.Instance.EquipWeapon(weaponToEquip);
+                Debug.Log("Equipped Weapon: " + itemUI.text.text);
+            }
+        }
+        else
+        {
+            ItemSO abilityToEquip = Bag.Instance.GetAbilities().Find(item => item.itemName == itemUI.text.text);
+
+            if (abilityToEquip != null)
+            {
+                // Equip ability in the next slot
+                PlayerEquipment.Instance.EquipAbility(abilityToEquip, nextAbilitySlot);
+                Debug.Log("Equipped Ability: " + itemUI.text.text + " en slot " + nextAbilitySlot);
+
+                // Move to the next slot for the next ability
+                nextAbilitySlot++;
+                if (nextAbilitySlot >= PlayerEquipment.Instance.equippedAbilities.Length)
+                {
+                    nextAbilitySlot = 0;
+                }
+            }
+        }
+    }
+
+    void UpdateSubmenuSelection()
+    {
+        optionEquip.color = submenuIndex == 0 ? Color.yellow : Color.white;
+        optionCancel.color = submenuIndex == 1 ? Color.yellow : Color.white;
     }
 }
