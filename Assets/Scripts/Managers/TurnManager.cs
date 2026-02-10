@@ -15,18 +15,16 @@ public class TurnManager : MonoBehaviour
     [Header("Start Turn Panel")]
     [SerializeField] private GameObject selectActionPanel;
     [SerializeField] private TextMeshProUGUI txtTurnTitle;
-    [SerializeField] private Button btnBasicAttack;
-    [SerializeField] private Button btnAbility1;
-    [SerializeField] private TextMeshProUGUI txtAbility1;
-    [SerializeField] private Button btnAbility2;
-    [SerializeField] private TextMeshProUGUI txtAbility2;
+    [SerializeField] private TextMeshProUGUI AbilityLabel1;
+    [SerializeField] private TextMeshProUGUI AbilityDescr1;
+    [SerializeField] private TextMeshProUGUI AbilityLabel2;
+    [SerializeField] private TextMeshProUGUI AbilityDescr2;
 
 
     [Header("Choose Target Panel")]
     [SerializeField] private GameObject chooseTargetPanel;
     [SerializeField] private Transform targetContainer;
     [SerializeField] private GameObject targetButtonPrefab;
-    [SerializeField] private Button btnCancelAbility;
 
 
     [Header("QTE Panel")]
@@ -37,6 +35,24 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private Ability selectedAbility;
     [SerializeField] private List<Combatant> selectedTargets;
 
+    private enum Action
+    {
+        SelectingAbility,
+        SelectingTarget,
+        Confirming,
+        Attacking,
+    }
+    private Action currentAction = Action.SelectingAbility;
+
+    private string[] keys = {"Q","W","E","R"};
+    private KeyCode[] inputKeys = {
+        KeyCode.Q,
+        KeyCode.W,
+        KeyCode.E,
+        KeyCode.R
+    };
+    private Dictionary<KeyCode, bool> keyPressed = new Dictionary<KeyCode, bool>();
+
     void Awake()
     {
         chooseTargetPanel.SetActive(false);
@@ -44,6 +60,72 @@ public class TurnManager : MonoBehaviour
         combatants = new List<Combatant>();
         
         selectedTargets = new List<Combatant>();
+
+        KeyCode[] keysToCheck = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.Escape };
+        foreach (var key in keysToCheck)
+            keyPressed[key] = false;
+    }
+
+    private bool GetKeyPressedOnce(KeyCode key)
+    {
+        bool isDown = Input.GetKey(key);
+
+        if (isDown && !keyPressed[key])
+        {
+            keyPressed[key] = true; // marca que la tecla ya se registró
+            return true;
+        }
+
+        if (!isDown)
+            keyPressed[key] = false; // se levantó, se puede volver a detectar
+
+        return false;
+    }
+
+    void Update()
+    {
+        if(currentAction == Action.SelectingAbility)
+            HandleSelectAbility();
+        if(currentAction == Action.SelectingTarget)
+            HandleSelectTarget();
+        if(currentAction == Action.Confirming)
+            HandleConfirm();
+    }
+
+    void HandleSelectAbility()
+    {
+        Combatant combatant = combatants[currentIndex];
+
+        if (GetKeyPressedOnce(KeyCode.Q))
+            SelectAttack();
+        else if (GetKeyPressedOnce(KeyCode.W))
+            SelectAbility(combatant.GetAbility1());
+        else if (GetKeyPressedOnce(KeyCode.E))
+            SelectAbility(combatant.GetAbility2());
+    }
+
+    void HandleSelectTarget()
+    {
+        int i = 0;
+        foreach(Combatant c in GetEnemies())
+        {
+            if (GetKeyPressedOnce(inputKeys[i]))
+                SelectTarget(c);
+
+            i++;
+        }
+
+        if (GetKeyPressedOnce(KeyCode.Escape))
+            CancelAbility();
+    }
+
+    void HandleConfirm()
+    {
+        if (GetKeyPressedOnce(KeyCode.Q))
+            SelectTarget(null);
+
+        if (GetKeyPressedOnce(KeyCode.Escape))
+            CancelAbility();
     }
 
     public void AddCombatant(Combatant pc)
@@ -93,12 +175,10 @@ public class TurnManager : MonoBehaviour
             qtePanel.SetActive(false);
             
             txtTurnTitle.text = "Turno de "+combatant.name;
-            txtAbility1.text = combatant.GetAbility1().name;
-            txtAbility2.text = combatant.GetAbility2().name;
-
-            btnBasicAttack.onClick.AddListener(() => SelectAttack());
-            btnAbility1.onClick.AddListener(() => SelectAbility(combatant.GetAbility1()));
-            btnAbility2.onClick.AddListener(() => SelectAbility(combatant.GetAbility2()));
+            AbilityLabel1.text = combatant.GetAbility1().name;
+            AbilityLabel2.text = combatant.GetAbility2().name;
+            AbilityDescr1.text = combatant.GetAbility1().GetFormattedDescription();
+            AbilityDescr2.text = combatant.GetAbility2().GetFormattedDescription();
         }
         else
         {
@@ -109,13 +189,17 @@ public class TurnManager : MonoBehaviour
 
             txtTurnTitle.text = "Turno de "+combatant.name;
             selectedAbility = ChooseRandomAbility(combatant);
+
             if(selectedAbility.target == AttackTarget.Ally)
                 selectedTargets.Add(GetRandomEnemy());
+
             else if(selectedAbility.target == AttackTarget.AllyTeam)
                 foreach(Combatant c in GetEnemies())
                     selectedTargets.Add(c);
+
             else if(selectedAbility.target == AttackTarget.Enemy)
                 selectedTargets.Add(GetRandomHero());
+
             else if(selectedAbility.target == AttackTarget.EnemyTeam)
                 foreach(Combatant c in GetHeroes())
                     selectedTargets.Add(c);
@@ -130,10 +214,13 @@ public class TurnManager : MonoBehaviour
         selectActionPanel.SetActive(true);
         chooseTargetPanel.SetActive(false);
         qtePanel.SetActive(false);
+
+        currentAction = Action.SelectingAbility;
     }
 
     public void ShowTargetSelection(List<Combatant> targets)
     {
+        currentAction = Action.SelectingTarget;
         chooseTargetPanel.SetActive(true);
 
         foreach (Transform child in targetContainer)
@@ -149,7 +236,7 @@ public class TurnManager : MonoBehaviour
 
             GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
             TargetButton btn = btnObj.GetComponent<TargetButton>();
-            btn.Init(target, this, target.name);
+            btn.Init(target, this, target.name, keys[i]);
             
             RectTransform rt = btnObj.GetComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(0, startY + i * spacing);
@@ -159,54 +246,66 @@ public class TurnManager : MonoBehaviour
 
     public void ShowConfirmation()
     {
+        currentAction = Action.Confirming;
         chooseTargetPanel.SetActive(true);
 
         foreach (Transform child in targetContainer)
             Destroy(child.gameObject);
-
         
         GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
         TargetButton btn = btnObj.GetComponent<TargetButton>();
 
-        btn.Init(null, this, "Confirmar");
+        btn.Init(null, this, "Confirmar", "Q");
     }
 
     private void SelectAttack()
     {
-        Debug.Log("PULSADO EL ATAQUE");
-        btnCancelAbility.onClick.RemoveAllListeners();
-        
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(true);
         qtePanel.SetActive(false);
 
-        btnCancelAbility.onClick.AddListener(() => CancelAbility());
         ShowTargetSelection(GetEnemies());
     }
 
     private void SelectAbility(Ability a)
     {
-        btnCancelAbility.onClick.RemoveAllListeners();
-
         selectedAbility = a;
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(true);
         qtePanel.SetActive(false);
-        btnCancelAbility.onClick.AddListener(() => CancelAbility());
+        
         if (a.target == AttackTarget.EnemyTeam || a.target == AttackTarget.AllyTeam)
+        {
             ShowConfirmation();
+            currentAction = Action.Confirming;
+        }
         else if (a.target == AttackTarget.Ally)
+        {
             ShowTargetSelection(GetHeroes());
+            currentAction = Action.SelectingTarget;
+        }
         else
+        {
             ShowTargetSelection(GetEnemies());
+            currentAction = Action.SelectingTarget;
+        }
     }
-
-    private List<Combatant> GetEnemies() => combatants.FindAll(c => c.GetTeam() == Team.Enemy);
-    private List<Combatant> GetHeroes() => combatants.FindAll(c => c.GetTeam() == Team.Hero);
 
     public void SelectTarget(Combatant c)
     {
         selectedTargets.Add(c);
+        if(selectedTargets[0] == null)
+        {
+            selectedTargets = new List<Combatant>();
+            foreach(
+                Combatant comb in 
+                    selectedAbility.target == AttackTarget.AllyTeam ? GetHeroes() :
+                    selectedAbility.target == AttackTarget.EnemyTeam ? GetEnemies() :
+                    GetEnemies()
+                )
+                selectedTargets.Add(comb);
+        }
+        
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
         if(selectedAbility == null)
@@ -220,6 +319,7 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator ShowBasicAttack()
     {
+        currentAction = Action.Attacking;
         Combatant combatant = combatants[currentIndex];
         
         string actionText = combatant.name + " hace un ataque " +
@@ -241,6 +341,7 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator ShowAbilityAttack()
     {
+        currentAction = Action.Attacking;
         Combatant combatant = combatants[currentIndex];
 
         string actionText = combatant.name + " usa " +
@@ -262,6 +363,7 @@ public class TurnManager : MonoBehaviour
             multiplier -= qteManager.MissCount * 0.1f;
 
             combatant.abilityPoints += qteManager.PerfectCount / 2;
+
 
             yield return new WaitForSeconds(0.5f);
         }
@@ -322,12 +424,18 @@ public class TurnManager : MonoBehaviour
     {
         combatants[currentIndex].EndTurn();
         currentIndex = (currentIndex + 1) % combatants.Count;
+        currentAction = Action.SelectingAbility;
         if(currentIndex != combatants.Count - 1)
             StartTurn();
         else
             StartRound();
 
     }
+
+    
+
+    private List<Combatant> GetEnemies() => combatants.FindAll(c => c.GetTeam() == Team.Enemy && !c.dead);
+    private List<Combatant> GetHeroes() => combatants.FindAll(c => c.GetTeam() == Team.Hero && !c.dead);
 
     private Ability ChooseRandomAbility(Combatant enemy) => enemy.GetAbilities()[Random.Range(0, enemy.GetAbilities().Length)];
 

@@ -23,12 +23,20 @@ public class Combatant : MonoBehaviour
 
     private Dictionary<StatusEffect, int> effects = new Dictionary<StatusEffect, int>();
 
+    void Update()
+    {
+        foreach (KeyValuePair<StatusEffect, int> kvp in effects)
+        {
+            StatusEffect effect = kvp.Key;
+            int duration = kvp.Value;
+        }
+    }
+
+
     public void AddEffect(StatusEffect effect)
     {
         if (effects.ContainsKey(effect))
         {
-            Debug.Log("effects[effect]: "+effects[effect]);
-            Debug.Log("effect.remainingTurns: "+effect.remainingTurns);
             effects[effect] = Mathf.Max(effects[effect], effect.remainingTurns);
         }
         else
@@ -36,8 +44,6 @@ public class Combatant : MonoBehaviour
             effects.Add(effect, effect.remainingTurns);
             
             var keys = new List<StatusEffect>(effects.Keys);
-            foreach (var e in keys)
-                Debug.Log("("+name+")"+e+": "+effects[e]);
         }
     }
 
