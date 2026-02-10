@@ -165,6 +165,7 @@ public class BagUI : MonoBehaviour
         currentSelectedItem = itemUI;
         submenuUI.SetActive(true);
         submenuOpen = true;
+        MenuManager.Instance.SubMenuUsing = true;
         submenuIndex = 0;
 
         string itemName = itemUI.text.text; 
@@ -177,6 +178,7 @@ public class BagUI : MonoBehaviour
     {
         submenuUI.SetActive(false);
         submenuOpen = false;
+        MenuManager.Instance.SubMenuUsing = false;
         currentSelectedItem = null;
     }
 

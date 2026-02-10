@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MenuManager : MonoBehaviour
     public static MenuManager Instance;
 
     public GameObject menuPanel;
+    public GameObject controlsPanel;
     public Transform optionsContainer;
     private List<TextMeshProUGUI> options = new List<TextMeshProUGUI>();
     private int selectedIndex = 0;
@@ -44,6 +46,7 @@ public class MenuManager : MonoBehaviour
     {
 
         bagUI.SetActive(false);
+        controlsPanel.SetActive(false);
 
         keyboard = Keyboard.current;
 
@@ -66,7 +69,7 @@ public class MenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         if(keyboard == null) return;
+        if(keyboard == null) return;
 
         // Abrir/cerrar menú
         if(keyboard.escapeKey.wasPressedThisFrame && !SubMenuUsing)
@@ -75,6 +78,11 @@ public class MenuManager : MonoBehaviour
                 StartCoroutine(HideMenu());
             else
                 StartCoroutine(ShowMenu());
+        }
+
+        if(keyboard.oKey.wasPressedThisFrame)
+        {
+            controlsPanel.SetActive(false);
         }
 
         if(!menuActive) return;
@@ -94,7 +102,7 @@ public class MenuManager : MonoBehaviour
         }
 
         // Seleccionar opción
-        if(keyboard.enterKey.wasPressedThisFrame && !SubMenuUsing)
+        if(!bagUI.activeSelf && keyboard.enterKey.wasPressedThisFrame && !SubMenuUsing)
         {
             SelectOption();
         }
@@ -130,11 +138,12 @@ public class MenuManager : MonoBehaviour
             case "Mochila":
                 OpenBag();
                 break;
-            case "Controls":
-                // Mostrar controles
+            case "Controles":
+                controlsPanel.SetActive(true);
                 break;
-            case "Exit":
+            case "Salir":
                 // Volver menu inicial
+                SceneManager.LoadScene("SampleScene");
                 break;
         }
     }
