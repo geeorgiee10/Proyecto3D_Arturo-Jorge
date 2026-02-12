@@ -130,20 +130,19 @@ public class MenuManager : MonoBehaviour
     void SelectOption()
     {
         string choice = options[selectedIndex].text;
-        Debug.Log("Seleccionaste: " + choice);
 
         // Lógica de cada opción
-        switch(choice)
+        switch(selectedIndex)
         {
-            case "Mochila":
+            case 0:
                 OpenBag();
                 break;
-            case "Controles":
+            case 1:
                 controlsPanel.SetActive(true);
                 break;
-            case "Salir":
+            case 2:
                 // Volver menu inicial
-                SceneManager.LoadScene("SampleScene");
+                TransitionManager.Instance.LoadSceneWithFade("SampleScene");
                 break;
         }
     }

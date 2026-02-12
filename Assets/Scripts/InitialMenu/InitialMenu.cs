@@ -22,7 +22,8 @@ public class InitialMenu : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene("Escenario");
+        Debug.Log("Iniciar Juego");
+        TransitionManager.Instance.LoadSceneWithFade("GameScene");
     }
 
     public void Quit()
