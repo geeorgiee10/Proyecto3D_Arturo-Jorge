@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Melodia
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Melodia
-  description: Melodia
-  type: 1
-  element: 1
+  ability: {fileID: 11400000, guid: e135d9e76d715984eb1478d641aba82c, type: 2}
+  weapon: {fileID: 0}

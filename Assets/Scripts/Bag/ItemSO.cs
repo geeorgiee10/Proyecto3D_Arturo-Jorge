@@ -4,7 +4,6 @@ using UnityEngine;
 public class ItemSO : ScriptableObject
 {
     public string itemName;
-    public string description;
-    public CollectibleType type;
-    public Element element;
+    public Ability ability;
+    public Weapon weapon;
 }

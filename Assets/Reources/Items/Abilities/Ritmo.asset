@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Ritmo
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Ritmo
-  description: Ritmo
-  type: 1
-  element: 0
+  ability: {fileID: 11400000, guid: 25971e69327dcb847a9e55d22d30d11d, type: 2}
+  weapon: {fileID: 0}

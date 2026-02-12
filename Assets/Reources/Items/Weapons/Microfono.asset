@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Microfono
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Microfono
-  description: Microfono del heavy metal
-  type: 0
-  element: 2
+  ability: {fileID: 0}
+  weapon: {fileID: 11400000, guid: 06da51fe07888e84fa31d9f5221ec61e, type: 2}

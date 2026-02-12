@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Piano
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Piano
-  description: Piano trompetero
-  type: 0
-  element: 3
+  ability: {fileID: 0}
+  weapon: {fileID: 11400000, guid: b56b09e0d7c157c40b45cb6f24cd1635, type: 2}

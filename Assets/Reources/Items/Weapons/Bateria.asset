@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Bateria
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Bateria
-  description: La bateria de cristo
-  type: 0
-  element: 0
+  ability: {fileID: 0}
+  weapon: {fileID: 11400000, guid: b921b42262b948644b5d7e230a5f88a5, type: 2}

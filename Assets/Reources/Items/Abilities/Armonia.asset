@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Armonia
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Armonia
-  description: Armonia
-  type: 1
-  element: 2
+  ability: {fileID: 11400000, guid: 00f0043e168bdd3489e220d596fecd5f, type: 2}
+  weapon: {fileID: 0}

@@ -25,16 +25,19 @@ public class Bag : MonoBehaviour
 
     public void AddItem(ItemSO item)
     {
-        switch (item.type)
+        if(item.weapon == null && item.ability == null)
         {
-            case CollectibleType.Weapon:
-                items.Add(item);
-                break;
-
-            case CollectibleType.Ability:
-                abilities.Add(item);
-                break;
+            Debug.LogWarning("El item " + item.itemName + " no tiene ni arma ni habilidad asignada.");
+            return;
         }
+
+        if (item.ability != null)
+            abilities.Add(item);
+
+        if (item.weapon != null)
+            items.Add(item);
+
+    
     }
 
     public bool HasItem(ItemSO item)

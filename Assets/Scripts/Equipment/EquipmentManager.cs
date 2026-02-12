@@ -22,28 +22,37 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipWeapon(ItemSO weapon)
     {
-        EquipInternal(weapon, true);
+        EquipInternal(weapon);
     }
 
     public void EquipAbility(ItemSO ability)
     {
-        EquipInternal(ability, false);
+        EquipInternal(ability);
     }
 
-    void EquipInternal(ItemSO item, bool isWeapon)
+    void EquipInternal( ItemSO item /*bool isWeapon*/)
     {
         foreach (var character in characters)
         {
-            if (character.element == item.element)
-            {
-                if (isWeapon)
+            if(item.weapon != null)
+                if(item.weapon.element == character.element)
                     character.EquipWeapon(item);
-                else
+            if(item.ability != null)
+                if(item.ability.element == character.element)
                     character.EquipAbility(item);
-                return;
-            }
+
+
+
+            // if(isWeapon && item.weapon == null)
+                
+            // if (character.element == item.element)
+            // {
+            //     if (isWeapon)
+            //     else
+            //         character.EquipAbility(item);
+            //     return;
+            // }
         }
 
-        Debug.LogWarning("No hay personaje con elemento " + item.element);
     }
 }

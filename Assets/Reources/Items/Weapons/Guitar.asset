@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Guitar
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Guitarra
-  description: Arma del jugador
-  type: 0
-  element: 1
+  ability: {fileID: 0}
+  weapon: {fileID: 11400000, guid: 8398e34fdbe78e543aea8bff9ddea9d8, type: 2}
