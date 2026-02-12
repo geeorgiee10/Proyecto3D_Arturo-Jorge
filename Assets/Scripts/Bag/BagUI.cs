@@ -57,7 +57,7 @@ public class BagUI : MonoBehaviour
         ClearContainer(itemsContainer, weaponItems);
         ClearContainer(abilitiesContainer, abilityItems);
 
-        equipText.text = "Equipar";
+        equipText.text = "• Equipar";
 
         SpawnItems(Bag.Instance.GetItems(), itemsContainer, weaponItems);
         SpawnItems(Bag.Instance.GetAbilities(), abilitiesContainer, abilityItems);
@@ -203,40 +203,26 @@ public class BagUI : MonoBehaviour
             if(CharacterEquipment.Instance.equippedWeapon == weapon)
             {
                 CharacterEquipment.Instance.equippedWeapon = null;
-                equipText.text = "Equipar";
+                equipText.text = "• Equipar";
             }
             else
             {
                 if (weapon != null)
                     EquipmentManager.Instance.EquipWeapon(weapon);
-                equipText.text = "Desequipar";
+                equipText.text = "• Desequipar";
             }
         }
         else
         {
             ItemSO ability = Bag.Instance.GetAbilities().Find(i => i.itemName == itemUI.text.text);
 
+            if (ability != null)
+                EquipmentManager.Instance.EquipAbility(ability);
 
-            for(int i = 0; i < CharacterEquipment.Instance.equippedAbilities.Length; i++)
-            {
-                Debug.Log(CharacterEquipment.Instance.equippedAbilities[i]);
-                if(CharacterEquipment.Instance.equippedAbilities[i] == ability)
-                {
-                    Debug.Log(CharacterEquipment.Instance.equippedAbilities[i]);
-                    CharacterEquipment.Instance.equippedAbilities[i] = null;
-                    equipText.text = "Equipar";
-                    return; 
-                }
 
-                else
-                {
-                    if (ability != null)
-                        EquipmentManager.Instance.EquipAbility(ability);
-                        
-                    equipText.text = "Desequipar";
-                    return;
-                }
-            }
+            bool nowEquipped = CharacterEquipment.Instance.ToggleAbility(ability);
+
+            equipText.text = nowEquipped ? "• Desequipar" : "• Equipar";
         }
     }
     void UpdateSubmenuSelection()
