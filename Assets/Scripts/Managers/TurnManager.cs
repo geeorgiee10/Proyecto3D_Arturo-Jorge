@@ -33,6 +33,9 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private Ability selectedAbility;
     [SerializeField] private List<Combatant> selectedTargets;
 
+    [Header("Sound")]
+    [SerializeField] private AudioSource perfectComplete;
+
     private enum Action
     {
         SelectingAbility,
@@ -407,6 +410,7 @@ public class TurnManager : MonoBehaviour
             {
                 combatant.abilityPoints++;
                 multiplier += .2f;
+                perfectComplete.Play();
             }
 
             yield return new WaitForSeconds(0.5f);

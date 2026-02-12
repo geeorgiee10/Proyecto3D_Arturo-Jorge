@@ -55,7 +55,7 @@ public class BeatUI : MonoBehaviour
     {
         background.color = result switch
         {
-            QTEResult.Perfect => Color.green,
+            QTEResult.Perfect => new Color(0f, 1f, 1f),
             QTEResult.Good => Color.yellow,
             QTEResult.Miss => Color.red,
             _ => Color.white

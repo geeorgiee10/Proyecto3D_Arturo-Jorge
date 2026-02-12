@@ -17,12 +17,15 @@ public class HitFeedbackUI : MonoBehaviour
         canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
-    public void Play(QTEResult result)
+    public void Play(QTEResult result, int perfectCount)
     {
         switch (result)
         {
             case QTEResult.Perfect:
-                text.text = "PERFECT!";
+                if(perfectCount == 1)
+                    text.text = "PERFECT!";
+                else
+                    text.text = "x"+perfectCount+"PERFECT!";
                 text.color = new Color(0f, 1f, 1f);
                 rect.localScale = Vector3.one * 0.5f;
                 StartCoroutine(PerfectAnimation());

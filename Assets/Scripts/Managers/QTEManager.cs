@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class QTEManager : MonoBehaviour
 {
+    [Header("Beat Data")]
     [SerializeField] private RectTransform timeline;
     [SerializeField] private BeatUI beatPrefab;
     [SerializeField] private RectTransform progressBar;
@@ -21,9 +22,26 @@ public class QTEManager : MonoBehaviour
 
     private int beatPoints = 0;
 
+
+    [Header("Validate Beat")]
     [SerializeField] private HitFeedbackUI feedbackPrefab;
     [SerializeField] private RectTransform feedbackParent;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioSource[] missSounds;
+
+    [SerializeField] private AudioSource goodSound;
+
+    [SerializeField] private AudioSource perfect1;
+    [SerializeField] private AudioSource perfect2;
+    [SerializeField] private AudioSource perfect3;
+    [SerializeField] private AudioSource perfect4;
+    [SerializeField] private AudioSource perfect5;
+    [SerializeField] private AudioSource perfect6;
+
+    private int perfectCombo = 0;
+
+    [Header("QTE Effects")]
     private bool grooveActive = false;
     private bool extasisActive = false;
     private bool microtoneActive = false;
@@ -40,6 +58,7 @@ public class QTEManager : MonoBehaviour
     {
         beatPoints = 0;
         beats.Clear();
+        perfectCombo = 0;
         currentBeatIndex = 0;
 
         PerfectCount = 0;
@@ -72,25 +91,37 @@ public class QTEManager : MonoBehaviour
 
     void Update()
     {
+        if (!AnyQTEKeyPressed())
+            return;
+
+        if (currentBeatIndex >= beats.Count)
+            return;
+
+        BeatUI beat = beats[currentBeatIndex];
+
+        if (beat.resolved)
+            return;
+
         float barX = progressBar.anchoredPosition.x;
+        float distance = Mathf.Abs(barX - beat.XPosition);
 
-        foreach (var beat in beats)
+        if (distance <= goodWindow)
         {
-            if (!beat.gameObject.activeSelf || beat.resolved)
-                continue;
-
-            float distance = Mathf.Abs(barX - beat.XPosition);
-            if (distance > goodWindow)
-                continue;
-
             if (IsValidKeyPressed(beat.ExpectedKey))
             {
                 EvaluateHit(beat, distance);
-                break;
+            }
+            else
+            {
+                RegisterMiss(beat);
             }
         }
+        else
+        {
+            RegisterMiss(beat);
+        }
     }
-
+    
     bool IsValidKeyPressed(QTEKey expectedKey)
     {
         if (grooveActive)
@@ -140,14 +171,23 @@ public class QTEManager : MonoBehaviour
         {
             case QTEResult.Perfect:
                 PerfectCount++;
+                perfectCombo++;
+                PlayPerfectComboSound();
                 break;
+
             case QTEResult.Good:
                 GoodCount++;
+                goodSound.Play();
+                perfectCombo = 0;
                 break;
+
             case QTEResult.Miss:
                 MissCount++;
+                missSounds[Random.Range(0, missSounds.Length)].Play();
+                perfectCombo = 0;
                 break;
         }
+        currentBeatIndex++;
     }
 
     IEnumerator MoveProgressBar()
@@ -174,18 +214,28 @@ public class QTEManager : MonoBehaviour
 
     void CheckBeats(float previousX, float currentX)
     {
-        foreach (var beat in beats)
-        {
-            if (!beat.gameObject.activeSelf || beat.resolved)
-                continue;
+        if (currentBeatIndex >= beats.Count)
+            return;
 
-            float beatX = beat.XPosition;
-            if (previousX < beatX && currentX >= beatX)
-            {
-                beat.MarkResolved(QTEResult.Miss);
-                MissCount++;
-            }
+        BeatUI beat = beats[currentBeatIndex];
+
+        if (beat.resolved)
+            return;
+
+        float beatX = beat.XPosition;
+
+        if (previousX < beatX && currentX >= beatX)
+        {
+            RegisterMiss(beat);
         }
+    }
+
+    bool AnyQTEKeyPressed()
+    {
+        return Input.GetKeyDown(KeyCode.A) ||
+            Input.GetKeyDown(KeyCode.S) ||
+            Input.GetKeyDown(KeyCode.D) ||
+            Input.GetKeyDown(KeyCode.F);
     }
 
     void ClearBeats()
@@ -213,7 +263,37 @@ public class QTEManager : MonoBehaviour
 
         feedbackRect.anchoredPosition = pos;
 
-        feedback.Play(result);
+        feedback.Play(result, perfectCombo+1);
+    }
+
+    void PlayPerfectComboSound()
+    {
+        int comboIndex = Mathf.Clamp(perfectCombo, 1, 6);
+
+        switch (comboIndex)
+        {
+            case 1: perfect1?.Play(); break;
+            case 2: perfect2?.Play(); break;
+            case 3: perfect3?.Play(); break;
+            case 4: perfect4?.Play(); break;
+            case 5: perfect5?.Play(); break;
+            case 6: perfect6?.Play(); break;
+        }
+    }
+
+    void RegisterMiss(BeatUI beat)
+    {
+        if (beat.resolved)
+            return;
+
+        beat.MarkResolved(QTEResult.Miss);
+        ShowFeedback(QTEResult.Miss, beat);
+
+        MissCount++;
+        perfectCombo = 0;
+
+        if (missSounds.Length > 0)
+            missSounds[Random.Range(0, missSounds.Length)].Play();
     }
 }
 

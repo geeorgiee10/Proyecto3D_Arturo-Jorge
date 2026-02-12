@@ -15,16 +15,9 @@ MonoBehaviour:
   sequence:
   - key: 0
     type: 0
-  - key: 0
-    type: 1
   - key: 1
     type: 0
-  - key: 1
-    type: 0
-  - key: 1
-    type: 1
   - key: 2
     type: 0
-  bpm: 120
-  perfectWindow: 0.1
-  goodWindow: 0.25
+  - key: 1
+    type: 0
