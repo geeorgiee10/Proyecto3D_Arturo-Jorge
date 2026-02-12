@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6cff8c3c1be164bb2112b26296af71, type: 3}
+  m_Name: Vibrato
+  m_EditorClassIdentifier: Assembly-CSharp::Ability
+  name: Vibrato
+  description: Aplica {EFFECT} a todos los enemigos
+  damage: 0
+  type: 2
+  target: 1
+  element: 1
+  statusEffect: {fileID: 11400000, guid: e19184f99294ec64ab4d14e8e5038ff5, type: 2}
+  qtePattern: {fileID: 11400000, guid: 8a84dff36d788964b9785008c0023e65, type: 2}
+  cost: 3
