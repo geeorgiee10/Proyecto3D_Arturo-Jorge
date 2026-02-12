@@ -3,6 +3,8 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System;
+using System.Linq;
 
 public class BagUI : MonoBehaviour
 {
@@ -24,6 +26,8 @@ public class BagUI : MonoBehaviour
     private List<BagItemUI> weaponItems = new ();
     private List<BagItemUI> abilityItems = new ();
     
+    public TextMeshProUGUI descriptionAbilty;
+    public TextMeshProUGUI equipText;
 
     private int selectedIndex = 0;
     private bool weaponsSelected = true;
@@ -52,6 +56,8 @@ public class BagUI : MonoBehaviour
     {
         ClearContainer(itemsContainer, weaponItems);
         ClearContainer(abilitiesContainer, abilityItems);
+
+        equipText.text = "Equipar";
 
         SpawnItems(Bag.Instance.GetItems(), itemsContainer, weaponItems);
         SpawnItems(Bag.Instance.GetAbilities(), abilitiesContainer, abilityItems);
@@ -168,6 +174,12 @@ public class BagUI : MonoBehaviour
         MenuManager.Instance.SubMenuUsing = true;
         submenuIndex = 0;
 
+        if(!weaponsSelected)
+        {
+            ItemSO ability = Bag.Instance.GetAbilities().Find(i => i.itemName == currentSelectedItem.text.text);
+            descriptionAbilty.text = ability.ability.GetFormattedDescription();
+        }
+
         string itemName = itemUI.text.text; 
         submenuText.text = $"Equipar {(weaponsSelected ? "Instrumento" : "Habilidad")}: {itemName}";
 
@@ -188,15 +200,43 @@ public class BagUI : MonoBehaviour
         {
             ItemSO weapon = Bag.Instance.GetItems().Find(i => i.itemName == itemUI.text.text);
 
-            if (weapon != null)
-                EquipmentManager.Instance.EquipWeapon(weapon);
+            if(CharacterEquipment.Instance.equippedWeapon == weapon)
+            {
+                CharacterEquipment.Instance.equippedWeapon = null;
+                equipText.text = "Equipar";
+            }
+            else
+            {
+                if (weapon != null)
+                    EquipmentManager.Instance.EquipWeapon(weapon);
+                equipText.text = "Desequipar";
+            }
         }
         else
         {
             ItemSO ability = Bag.Instance.GetAbilities().Find(i => i.itemName == itemUI.text.text);
 
-            if (ability != null)
-                EquipmentManager.Instance.EquipAbility(ability);
+
+            for(int i = 0; i < CharacterEquipment.Instance.equippedAbilities.Length; i++)
+            {
+                Debug.Log(CharacterEquipment.Instance.equippedAbilities[i]);
+                if(CharacterEquipment.Instance.equippedAbilities[i] == ability)
+                {
+                    Debug.Log(CharacterEquipment.Instance.equippedAbilities[i]);
+                    CharacterEquipment.Instance.equippedAbilities[i] = null;
+                    equipText.text = "Equipar";
+                    return; 
+                }
+
+                else
+                {
+                    if (ability != null)
+                        EquipmentManager.Instance.EquipAbility(ability);
+                        
+                    equipText.text = "Desequipar";
+                    return;
+                }
+            }
         }
     }
     void UpdateSubmenuSelection()

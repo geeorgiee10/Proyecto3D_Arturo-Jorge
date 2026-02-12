@@ -2,12 +2,23 @@ using UnityEngine;
 
 public class CharacterEquipment : MonoBehaviour
 {
+    public static CharacterEquipment Instance;
+
     public Element element;
 
     public ItemSO equippedWeapon;
     public ItemSO[] equippedAbilities = new ItemSO[2];
 
     private int nextAbilitySlot = 0;
+
+    void Awake()
+    {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     public void EquipWeapon(ItemSO weapon)
     {
