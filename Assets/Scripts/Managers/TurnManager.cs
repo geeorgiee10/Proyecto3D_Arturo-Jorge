@@ -15,10 +15,8 @@ public class TurnManager : MonoBehaviour
     [Header("Start Turn Panel")]
     [SerializeField] private GameObject selectActionPanel;
     [SerializeField] private TextMeshProUGUI txtTurnTitle;
-    [SerializeField] private TextMeshProUGUI AbilityLabel1;
-    [SerializeField] private TextMeshProUGUI AbilityDescr1;
-    [SerializeField] private TextMeshProUGUI AbilityLabel2;
-    [SerializeField] private TextMeshProUGUI AbilityDescr2;
+    [SerializeField] private AbilityDisplay ability1;
+    [SerializeField] private AbilityDisplay ability2;
 
 
     [Header("Choose Target Panel")]
@@ -39,6 +37,8 @@ public class TurnManager : MonoBehaviour
     {
         SelectingAbility,
         SelectingTarget,
+        SelectingEnemyTarget,
+        SelectingAllyTarget,
         Confirming,
         Attacking,
     }
@@ -72,12 +72,12 @@ public class TurnManager : MonoBehaviour
 
         if (isDown && !keyPressed[key])
         {
-            keyPressed[key] = true; // marca que la tecla ya se registró
+            keyPressed[key] = true;
             return true;
         }
 
         if (!isDown)
-            keyPressed[key] = false; // se levantó, se puede volver a detectar
+            keyPressed[key] = false;
 
         return false;
     }
@@ -86,8 +86,10 @@ public class TurnManager : MonoBehaviour
     {
         if(currentAction == Action.SelectingAbility)
             HandleSelectAbility();
-        if(currentAction == Action.SelectingTarget)
-            HandleSelectTarget();
+        if(currentAction == Action.SelectingEnemyTarget)
+            HandleSelectEnemyTarget();
+        if(currentAction == Action.SelectingAllyTarget)
+            HandleSelectAllyTarget();
         if(currentAction == Action.Confirming)
             HandleConfirm();
     }
@@ -98,22 +100,39 @@ public class TurnManager : MonoBehaviour
 
         if (GetKeyPressedOnce(KeyCode.Q))
             SelectAttack();
-        else if (GetKeyPressedOnce(KeyCode.W))
+
+        else if (GetKeyPressedOnce(KeyCode.W) && ability1.canUse)
             SelectAbility(combatant.GetAbility1());
-        else if (GetKeyPressedOnce(KeyCode.E))
+
+        else if (GetKeyPressedOnce(KeyCode.E) && ability2.canUse)
             SelectAbility(combatant.GetAbility2());
     }
 
-    void HandleSelectTarget()
+    void HandleSelectEnemyTarget()
     {
         int i = 0;
-        foreach(Combatant c in GetEnemies())
-        {
-            if (GetKeyPressedOnce(inputKeys[i]))
-                SelectTarget(c);
+            foreach(Combatant c in GetEnemies())
+            {
+                if (GetKeyPressedOnce(inputKeys[i]))
+                    SelectTarget(c);
 
-            i++;
-        }
+                i++;
+            }
+
+        if (GetKeyPressedOnce(KeyCode.Escape))
+            CancelAbility();
+    }
+
+    void HandleSelectAllyTarget()
+    {
+        int i = 0;
+            foreach(Combatant c in GetHeroes())
+            {
+                if (GetKeyPressedOnce(inputKeys[i]))
+                    SelectTarget(c);
+
+                i++;
+            }
 
         if (GetKeyPressedOnce(KeyCode.Escape))
             CancelAbility();
@@ -175,10 +194,19 @@ public class TurnManager : MonoBehaviour
             qtePanel.SetActive(false);
             
             txtTurnTitle.text = "Turno de "+combatant.name;
-            AbilityLabel1.text = combatant.GetAbility1().name;
-            AbilityLabel2.text = combatant.GetAbility2().name;
-            AbilityDescr1.text = combatant.GetAbility1().GetFormattedDescription();
-            AbilityDescr2.text = combatant.GetAbility2().GetFormattedDescription();
+            ability1.canUse = combatant.abilityPoints >= combatant.abilities[0].cost && !combatant.HasEffect(Effect.Silence);
+            ability2.canUse = combatant.abilityPoints >= combatant.abilities[1].cost && !combatant.HasEffect(Effect.Silence);
+
+
+            ability1.txtTitle.text = combatant.abilities[0].name;
+            ability1.txtDescription.text = combatant.abilities[0].GetFormattedDescription();
+            ability1.txtKey.text = "W";
+            ability1.txtCost.text = ""+combatant.abilities[0].cost;
+
+            ability2.txtTitle.text = combatant.abilities[1].name;
+            ability2.txtDescription.text = combatant.abilities[1].GetFormattedDescription();
+            ability2.txtKey.text = "E";
+            ability2.txtCost.text = ""+combatant.abilities[1].cost;
         }
         else
         {
@@ -220,7 +248,6 @@ public class TurnManager : MonoBehaviour
 
     public void ShowTargetSelection(List<Combatant> targets)
     {
-        currentAction = Action.SelectingTarget;
         chooseTargetPanel.SetActive(true);
 
         foreach (Transform child in targetContainer)
@@ -263,7 +290,8 @@ public class TurnManager : MonoBehaviour
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(true);
         qtePanel.SetActive(false);
-
+        
+        currentAction = Action.SelectingEnemyTarget;
         ShowTargetSelection(GetEnemies());
     }
 
@@ -282,17 +310,19 @@ public class TurnManager : MonoBehaviour
         else if (a.target == AttackTarget.Ally)
         {
             ShowTargetSelection(GetHeroes());
-            currentAction = Action.SelectingTarget;
+            currentAction = Action.SelectingAllyTarget;
         }
         else
         {
             ShowTargetSelection(GetEnemies());
-            currentAction = Action.SelectingTarget;
+            currentAction = Action.SelectingEnemyTarget;
         }
     }
 
     public void SelectTarget(Combatant c)
     {
+        if(selectedAbility != null)
+            combatants[currentIndex].abilityPoints -= selectedAbility.cost;
         selectedTargets.Add(c);
         if(selectedTargets[0] == null)
         {
@@ -353,17 +383,31 @@ public class TurnManager : MonoBehaviour
 
         if (!combatant.isEnemy)
         {
+            qteManager.SetModifiers(
+                combatant.HasEffect(Effect.Groove),
+                combatant.HasEffect(Effect.Extasis),
+                combatant.HasEffect(Effect.Microtone)
+            );
             qteManager.ShowBeats(selectedAbility.qtePattern);
             yield return new WaitForSeconds(0.5f);
 
             Coroutine progressRoutine = qteManager.StartMoveProgressBar();
             yield return progressRoutine;
 
-            multiplier += qteManager.PerfectCount * 0.1f;
-            multiplier -= qteManager.MissCount * 0.1f;
+            multiplier += qteManager.PerfectCount * .1f;
+            multiplier -= qteManager.MissCount * .1f;
 
             combatant.abilityPoints += qteManager.PerfectCount / 2;
 
+            if(
+                qteManager.MissCount == 0 &&
+                qteManager.GoodCount == 0 &&
+                qteManager.PerfectCount != 0
+            )
+            {
+                combatant.abilityPoints++;
+                multiplier += .2f;
+            }
 
             yield return new WaitForSeconds(0.5f);
         }

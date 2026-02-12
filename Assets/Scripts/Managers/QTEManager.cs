@@ -21,6 +21,21 @@ public class QTEManager : MonoBehaviour
 
     private int beatPoints = 0;
 
+    [SerializeField] private HitFeedbackUI feedbackPrefab;
+    [SerializeField] private RectTransform feedbackParent;
+
+    private bool grooveActive = false;
+    private bool extasisActive = false;
+    private bool microtoneActive = false;
+
+    public void SetModifiers(bool groove, bool extasis, bool microtone)
+    {
+        grooveActive = groove;
+        extasisActive = extasis;
+        microtoneActive = microtone;
+    }
+
+
     public void ShowBeats(QTEPattern pattern)
     {
         beatPoints = 0;
@@ -40,7 +55,7 @@ public class QTEManager : MonoBehaviour
         foreach (QTEInput qteI in pattern.sequence)
         {
             BeatUI beat = Instantiate(beatPrefab, timeline);
-            beat.Setup(qteI, spacing, lastPosition);
+            beat.Setup(qteI, spacing, lastPosition, grooveActive);
 
             RectTransform rt = beat.GetComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(lastPosition, 0f);
@@ -68,7 +83,7 @@ public class QTEManager : MonoBehaviour
             if (distance > goodWindow)
                 continue;
 
-            if (IsCorrectKeyPressed(beat.ExpectedKey))
+            if (IsValidKeyPressed(beat.ExpectedKey))
             {
                 EvaluateHit(beat, distance);
                 break;
@@ -76,9 +91,16 @@ public class QTEManager : MonoBehaviour
         }
     }
 
-    bool IsCorrectKeyPressed(QTEKey key)
+    bool IsValidKeyPressed(QTEKey expectedKey)
     {
-        return key switch
+        if (grooveActive)
+            return Input.GetKeyDown(KeyCode.A) ||
+                Input.GetKeyDown(KeyCode.S) ||
+                Input.GetKeyDown(KeyCode.D) ||
+                Input.GetKeyDown(KeyCode.F);
+
+        // Comportamiento normal
+        return expectedKey switch
         {
             QTEKey.A => Input.GetKeyDown(KeyCode.A),
             QTEKey.S => Input.GetKeyDown(KeyCode.S),
@@ -90,20 +112,41 @@ public class QTEManager : MonoBehaviour
 
     void EvaluateHit(BeatUI beat, float distance)
     {
+        QTEResult result;
+
         if (distance <= perfectWindow)
-        {
-            beat.MarkResolved(QTEResult.Perfect);
-            PerfectCount++;
-        }
+            result = QTEResult.Perfect;
+
         else if (distance <= goodWindow)
-        {
-            beat.MarkResolved(QTEResult.Good);
-            GoodCount++;
-        }
+            result = QTEResult.Good;
+
         else
+            result = QTEResult.Miss;
+
+        if (result == QTEResult.Good)
+            if (extasisActive && microtoneActive)
+                result = QTEResult.Good;
+
+            else if (extasisActive)
+                result = QTEResult.Perfect;
+
+            else if (microtoneActive)
+                result = QTEResult.Miss;
+
+        beat.MarkResolved(result);
+        ShowFeedback(result, beat);
+
+        switch (result)
         {
-            beat.MarkResolved(QTEResult.Miss);
-            MissCount++;
+            case QTEResult.Perfect:
+                PerfectCount++;
+                break;
+            case QTEResult.Good:
+                GoodCount++;
+                break;
+            case QTEResult.Miss:
+                MissCount++;
+                break;
         }
     }
 
@@ -156,4 +199,28 @@ public class QTEManager : MonoBehaviour
         beats.Clear();
         currentBeatIndex = 0;
     }
+
+    void ShowFeedback(QTEResult result, BeatUI beat)
+    {
+        HitFeedbackUI feedback = Instantiate(feedbackPrefab, feedbackParent);
+
+        RectTransform feedbackRect = feedback.GetComponent<RectTransform>();
+        RectTransform beatRect = beat.GetComponent<RectTransform>();
+
+        
+        Vector2 pos = beatRect.anchoredPosition;
+        pos.y += 30f;
+
+        feedbackRect.anchoredPosition = pos;
+
+        feedback.Play(result);
+    }
 }
+
+/*
+
+    ToDo:
+
+    CUANDO SE HACE UN PERFECTO PONER EL SONIDO DE COMBO DEL JET SET RADIO
+
+*/
