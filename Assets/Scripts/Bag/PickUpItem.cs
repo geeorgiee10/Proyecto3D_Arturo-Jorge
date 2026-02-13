@@ -12,6 +12,7 @@ public class PickUpItem : MonoBehaviour
     private bool playerInRange;           
     private bool itemPickedUp; 
 
+
     void Start()
     {
         keyboard = Keyboard.current;
@@ -25,6 +26,9 @@ public class PickUpItem : MonoBehaviour
         {
             ObjectIndicator.Instance.Hide();
             Bag.Instance.AddItem(item);    
+
+            PickUpText.Instance.showText(item.itemName);
+
             itemPickedUp = true;                 
             Destroy(gameObject);                 
         }
