@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df6cff8c3c1be164bb2112b26296af71, type: 3}
-  m_Name: Redoble
+  m_Name: Muteo
   m_EditorClassIdentifier: Assembly-CSharp::Ability
-  name: Redoble
-  description: "Aplica {EFFECT} a un aliado adem\xE1s de curar vida"
-  damage: -10
-  type: 2
-  target: 3
-  element: 0
-  statusEffect: {fileID: 11400000, guid: fc8d9cb83e5fd5b478106aa02e4afd43, type: 2}
-  qtePattern: {fileID: 11400000, guid: eb1c7cb942a8e66458acdc60bf92adef, type: 2}
-  cost: 3
+  name: Muteo
+  description: "Da\xF1o de {ELEMENT} leve a un enemigo, aplica {EFFECT}"
+  damage: 5
+  type: 0
+  target: 0
+  element: 3
+  statusEffect: {fileID: 11400000, guid: 9a0613bba4b0fea44a4c1a5630bd5daa, type: 2}
+  qtePattern: {fileID: 11400000, guid: b4eb0f5e9bc668e4b987aa103ec32d49, type: 2}
+  cost: 7

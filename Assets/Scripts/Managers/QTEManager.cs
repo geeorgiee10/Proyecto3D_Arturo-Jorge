@@ -118,7 +118,8 @@ public class QTEManager : MonoBehaviour
         }
         else
         {
-            RegisterMiss(beat);
+            // RegisterMiss(beat);
+            return;
         }
     }
     
@@ -224,7 +225,7 @@ public class QTEManager : MonoBehaviour
 
         float beatX = beat.XPosition;
 
-        if (previousX < beatX && currentX >= beatX)
+        if (previousX < beatX && currentX >= beatX && !beat.resolved)
         {
             RegisterMiss(beat);
         }
@@ -294,6 +295,8 @@ public class QTEManager : MonoBehaviour
 
         if (missSounds.Length > 0)
             missSounds[Random.Range(0, missSounds.Length)].Play();
+            
+        currentBeatIndex++;
     }
 }
 

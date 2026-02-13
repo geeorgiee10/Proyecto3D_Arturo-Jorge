@@ -9,9 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41b86569866511846ac4f80514430507, type: 3}
-  m_Name: "Bater\xEDa Ominosa"
-  m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  name: 
-  damage: 10
-  element: 0
+  m_Script: {fileID: 11500000, guid: 98e34a8853b44d04e9de432b9bd63cec, type: 3}
+  m_Name: "Distorsi\xF3n QTE"
+  m_EditorClassIdentifier: Assembly-CSharp::QTEPattern
+  sequence:
+  - key: 2
+    type: 0
+  - key: 1
+    type: 0
+  - key: 2
+    type: 0
+  - key: 2
+    type: 0

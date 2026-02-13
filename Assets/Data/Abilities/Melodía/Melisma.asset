@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Melisma
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: Melisma
-  description: "Da\xF1o leve de {ELEMENT}, aplica {EFFECT} al objetivo"
+  description: "Da\xF1o de {ELEMENT}, aplica {EFFECT} al objetivo"
   damage: 10
   type: 1
   target: 0

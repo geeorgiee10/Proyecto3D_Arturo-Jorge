@@ -182,6 +182,9 @@ public class TurnManager : MonoBehaviour
     public void StartTurn()
     {
         Combatant combatant = combatants[currentIndex];
+        
+        selectedAbility = null;
+        selectedTargets = new List<Combatant>();
 
         if (combatant.dead)
         {
@@ -217,6 +220,16 @@ public class TurnManager : MonoBehaviour
             selectActionPanel.SetActive(false);
             chooseTargetPanel.SetActive(false);
             qtePanel.SetActive(true);
+
+            if (combatant.HasEffect(Effect.Silence))
+            {
+                selectedAbility = null;
+                selectedTargets.Clear();
+                selectedTargets.Add(GetRandomHero());
+
+                StartCoroutine(ShowBasicAttack());
+                return;
+            }
 
             txtTurnTitle.text = "Turno de "+combatant.name;
             selectedAbility = ChooseRandomAbility(combatant);
@@ -384,7 +397,7 @@ public class TurnManager : MonoBehaviour
 
         float multiplier = 1f;
 
-        if (!combatant.isEnemy)
+        if (combatant.team != Team.Enemy)
         {
             qteManager.SetModifiers(
                 combatant.HasEffect(Effect.Groove),
@@ -418,14 +431,18 @@ public class TurnManager : MonoBehaviour
         else
         {
             qtePanel.SetActive(false);
+
+            if(combatant.HasEffect(Effect.Extasis))
+                multiplier *= 1.2f;
+
+            if(combatant.HasEffect(Effect.Microtone))
+                multiplier *= .8f;
+
             yield return new WaitForSeconds(2.5f);
         }
 
         foreach(Combatant c in selectedTargets)
             selectedAbility.Apply(combatant, c, multiplier);
-
-        selectedAbility = null;
-        selectedTargets = new List<Combatant>();
 
         if (!CheckBattleEnd())
             EndTurn();
