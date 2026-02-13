@@ -2,17 +2,16 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    public Transform HeroTeam;   // referencia solo para los combatants
-    public Transform EnemyTeam;  // referencia solo para los combatants
+    public Transform HeroTeam;
+    public Transform EnemyTeam;
     public TurnManager turnManager;
-    public GameObject battleCardPrefab; // prefab de la card
-    public RectTransform canvas;        // canvas de la batalla
+    public GameObject battleCardPrefab;
+    public RectTransform canvas;
 
-    float spacing = 150f; // separación entre cards
+    float spacing = 150f;
 
     void Start()
     {
-        // Héroes: esquina inferior derecha -> izquierda
         int heroIndex = 0;
         foreach (Combatant c in HeroTeam.GetComponentsInChildren<Combatant>())
         {
@@ -22,17 +21,14 @@ public class BattleManager : MonoBehaviour
             card.GetComponent<BattleCardUi>().combatant = c;
             RectTransform rt = card.GetComponent<RectTransform>();
 
-            // Anchors en esquina inferior derecha
             rt.anchorMin = new Vector2(1, 0);
             rt.anchorMax = new Vector2(1, 0);
             rt.pivot = new Vector2(1, 0);
 
-            // Posición relativa desde la esquina inferior derecha
-            rt.anchoredPosition = new Vector2(-heroIndex * spacing, 0); // 10 píxeles del borde inferior
+            rt.anchoredPosition = new Vector2(-heroIndex * spacing, 0);
             heroIndex++;
         }
 
-        // Enemigos: esquina superior izquierda -> derecha
         int enemyIndex = 0;
         foreach (Combatant c in EnemyTeam.GetComponentsInChildren<Combatant>())
         {
@@ -42,16 +38,55 @@ public class BattleManager : MonoBehaviour
             card.GetComponent<BattleCardUi>().combatant = c;
             RectTransform rt = card.GetComponent<RectTransform>();
 
-            // Anchors en esquina superior izquierda
             rt.anchorMin = new Vector2(0, 1);
             rt.anchorMax = new Vector2(0, 1);
             rt.pivot = new Vector2(0, 1);
 
-            // Posición relativa desde la esquina superior izquierda
-            rt.anchoredPosition = new Vector2(enemyIndex * spacing, 0); // 10 píxeles del borde superior
+            rt.anchoredPosition = new Vector2(enemyIndex * spacing, 0);
             enemyIndex++;
         }
 
+        SetupTeamPositions(HeroTeam, true);
+        SetupTeamPositions(EnemyTeam, false);
+
+        // foreach (Combatant c in HeroTeam.GetComponentsInChildren<Combatant>())
+        //     turnManager.AddCombatant(c);
+
+        // foreach (Combatant c in EnemyTeam.GetComponentsInChildren<Combatant>())
+        //     turnManager.AddCombatant(c);
+
         turnManager.StartBattle();
+    }
+
+    void SetupTeamPositions(Transform team, bool isHero)
+    {
+        Combatant[] members = team.GetComponentsInChildren<Combatant>();
+        int count = members.Length;
+
+        if (count == 0)
+            return;
+
+        float planeWidth = 20f; // ancho total disponible
+        float spacing = planeWidth / Mathf.Max(count, 1);
+
+        float startOffset = -((count - 1) * spacing) / 2f;
+
+        for (int i = 0; i < count; i++)
+        {
+            Transform t = members[i].transform;
+
+            Vector3 localPos = t.localPosition;
+
+            localPos.x = startOffset + i * spacing;
+            localPos.z = isHero ? 6f : -6f;
+
+            t.localPosition = localPos;
+
+            // Opcional: girarlos automáticamente
+            if (isHero)
+                t.forward = Vector3.forward;
+            else
+                t.forward = Vector3.back;
+        }
     }
 }

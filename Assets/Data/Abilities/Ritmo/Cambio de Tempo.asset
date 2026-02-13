@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Cambio de Tempo
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: Cambio de Tempo
+  description: "Aplica {EFFECT} a todos los enemigos y les hace da\xF1o leve de {ELEMENT}"
   damage: 5
-  type: 2
+  type: 1
   target: 1
   element: 0
   statusEffect: {fileID: 11400000, guid: 5abc51b916747764e9ca6c709e8e428e, type: 2}
-  qtePattern: {fileID: 0}
+  qtePattern: {fileID: 11400000, guid: 6f209c7c6174fb44b95357e16a1b28c9, type: 2}
   cost: 5

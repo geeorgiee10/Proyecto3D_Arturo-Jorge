@@ -10,21 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98e34a8853b44d04e9de432b9bd63cec, type: 3}
-  m_Name: Vibrato QTE
+  m_Name: Redoble
   m_EditorClassIdentifier: Assembly-CSharp::QTEPattern
   sequence:
   - key: 0
     type: 0
-  - key: 0
-    type: 1
-  - key: 1
-    type: 0
-  - key: 1
-    type: 0
-  - key: 1
-    type: 1
   - key: 2
     type: 0
-  bpm: 120
-  perfectWindow: 0.1
-  goodWindow: 0.25
+  - key: 1
+    type: 0
+  - key: 3
+    type: 0
+  - key: 2
+    type: 0
+  - key: 0
+    type: 0

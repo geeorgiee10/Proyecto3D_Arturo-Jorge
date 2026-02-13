@@ -7,12 +7,9 @@ public class Combatant : MonoBehaviour
     public int maxHealth;
     public int health;
     public int strength;
-    public int chant;
     public int speed;
     public int initiative;
     public int abilityPoints;
-
-    public bool isEnemy;
     public bool dead = false;
 
     public Weapon weapon;
@@ -30,6 +27,9 @@ public class Combatant : MonoBehaviour
             StatusEffect effect = kvp.Key;
             int duration = kvp.Value;
         }
+
+        if(abilityPoints > 9) abilityPoints = 9;
+        if(abilityPoints < 0) abilityPoints = 0;
     }
 
 
@@ -64,14 +64,6 @@ public class Combatant : MonoBehaviour
         }
     }
 
-
-    // public int GetEffectTurns(StatusEffect effect)
-    // {
-    //     if (effects.Keys.ContainsKey(effect))
-    //         return effects[effect];
-    //     return 0;
-    // }
-
     public bool HasEffect(Effect effect)
     {
         bool has = false;
@@ -97,7 +89,6 @@ public class Combatant : MonoBehaviour
 
     public void AddHealth(int s) => health += s;
     public void AddStrength(int s) => strength += s; 
-    public void AddChant(int s) => chant += s; 
     public void AddSpeed(int s) => speed += s;
     public void AddInitiative(int s){
         initiative += s;
@@ -108,7 +99,6 @@ public class Combatant : MonoBehaviour
     public int GetMaxHealth() => maxHealth;
     public int GetHealth() => health;
     public int GetStrength() => strength;
-    public int GetChant() => chant;
     public int GetSpeed() => speed;
     public int GetInitiative() => initiative;
     public Team GetTeam() => team;
@@ -116,6 +106,5 @@ public class Combatant : MonoBehaviour
     public Ability GetAbility1() => abilities[0];
     public Ability GetAbility2() => abilities[1];
 
-    // Obtener todos los efectos activos
     public Dictionary<StatusEffect, int> GetEffects() => new Dictionary<StatusEffect, int>(effects);
 }

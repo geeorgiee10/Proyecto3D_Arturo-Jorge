@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Guitarra Macabra
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   name: Guitarra Macabra
-  damage: 80
+  damage: 10
   element: 1

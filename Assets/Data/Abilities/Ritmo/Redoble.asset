@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Redoble
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: Redoble
-  damage: 0
+  description: "Aplica {EFFECT} a un aliado adem\xE1s de curar vida"
+  damage: -10
   type: 2
   target: 3
   element: 0
   statusEffect: {fileID: 11400000, guid: fc8d9cb83e5fd5b478106aa02e4afd43, type: 2}
-  qtePattern: {fileID: 0}
+  qtePattern: {fileID: 11400000, guid: eb1c7cb942a8e66458acdc60bf92adef, type: 2}
   cost: 3

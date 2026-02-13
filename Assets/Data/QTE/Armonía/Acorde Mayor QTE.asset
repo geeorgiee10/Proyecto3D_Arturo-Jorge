@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Acorde Mayor QTE
   m_EditorClassIdentifier: Assembly-CSharp::QTEPattern
   sequence:
-  - key: 0
+  - key: 3
     type: 0
-  - key: 0
+  - key: 3
     type: 0
   - key: 2
     type: 0
-  - key: 3
+  - key: 0
     type: 0

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: "Bater\xEDa Ominosa"
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   name: 
-  damage: 0
+  damage: 10
   element: 0
