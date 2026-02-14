@@ -19,6 +19,15 @@ public class Combatant : MonoBehaviour
     public Ability[] abilities;
 
     private Dictionary<StatusEffect, int> effects = new Dictionary<StatusEffect, int>();
+    [SerializeField] private Transform cameraAnchor;
+
+    public Transform GetCameraAnchor()
+    {
+        if (cameraAnchor == null)
+            return transform; // fallback seguro
+
+        return cameraAnchor;
+    }
 
     void Update()
     {

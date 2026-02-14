@@ -78,7 +78,7 @@ public class BattleManager : MonoBehaviour
             Vector3 localPos = t.localPosition;
 
             localPos.x = startOffset + i * spacing;
-            localPos.z = isHero ? 6f : -6f;
+            localPos.z = isHero ? -6f : 6f;
 
             t.localPosition = localPos;
 

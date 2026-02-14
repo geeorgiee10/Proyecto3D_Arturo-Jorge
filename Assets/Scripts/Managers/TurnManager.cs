@@ -36,6 +36,11 @@ public class TurnManager : MonoBehaviour
     [Header("Sound")]
     [SerializeField] private AudioSource perfectComplete;
 
+    [Header("Camera Management")]
+    [SerializeField] private BattleCameraController cameraController;
+    [SerializeField] private Transform enemyAttackCameraPos;
+
+
     private enum Action
     {
         SelectingAbility,
@@ -194,6 +199,12 @@ public class TurnManager : MonoBehaviour
 
         if (combatant.GetTeam() == Team.Hero)
         {
+            Vector3 enemyCenter = new Vector3(0f, 1.5f, 6f);
+            cameraController.MoveTo(
+                combatant.GetCameraAnchor(),
+                null,
+                enemyCenter
+            );
 
             selectActionPanel.SetActive(true);
             chooseTargetPanel.SetActive(false);
@@ -216,6 +227,10 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
+            cameraController.MoveTo(
+                enemyAttackCameraPos,
+                combatant.transform
+            );
 
             selectActionPanel.SetActive(false);
             chooseTargetPanel.SetActive(false);
