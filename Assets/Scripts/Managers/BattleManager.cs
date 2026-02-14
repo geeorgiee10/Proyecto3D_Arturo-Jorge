@@ -35,14 +35,14 @@ public class BattleManager : MonoBehaviour
             turnManager.AddCombatant(c);
 
             GameObject card = Instantiate(battleCardPrefab, canvas);
-            card.GetComponent<BattleCardUi>().combatant = c;
-            RectTransform rt = card.GetComponent<RectTransform>();
+            BattleCardUi ui = card.GetComponent<BattleCardUi>();
+            ui.combatant = c;
 
-            rt.anchorMin = new Vector2(0, 1);
-            rt.anchorMax = new Vector2(0, 1);
-            rt.pivot = new Vector2(0, 1);
+            ui.followWorldPosition = true;
 
-            rt.anchoredPosition = new Vector2(enemyIndex * spacing, 0);
+            ui.worldOffset = new Vector3(0, 3.5f, 0);
+            card.GetComponent<RectTransform>().localScale = Vector3.one * 0.5f;
+
             enemyIndex++;
         }
 

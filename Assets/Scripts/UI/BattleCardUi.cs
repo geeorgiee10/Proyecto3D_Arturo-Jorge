@@ -14,6 +14,12 @@ public class BattleCardUi : MonoBehaviour
     [SerializeField] Image[] imgAP;
     [SerializeField] TextMeshProUGUI txtAP;
 
+    public bool followWorldPosition = false;
+    public Vector3 worldOffset = new Vector3(0, 3f, 0);
+
+    private Camera mainCamera;
+    private RectTransform rectTransform;
+
     private Dictionary<Effect, string> colors = new Dictionary<Effect, string>()
     {
         { Effect.OutOfTempo, "#dfa945" },
@@ -29,6 +35,11 @@ public class BattleCardUi : MonoBehaviour
     private float currentFill = 1f;
     public float lerpSpeed = 3f;
 
+    void Start()
+    {
+        mainCamera = Camera.main;
+        rectTransform = GetComponent<RectTransform>();
+    }
 
     void Update()
     {
@@ -90,5 +101,23 @@ public class BattleCardUi : MonoBehaviour
                 i.color = new Color(1, 1, 1, 0);
             txtAP.text = "";
         }
+    }
+
+    void LateUpdate()
+    {
+        if (!followWorldPosition || combatant == null)
+            return;
+
+        Vector3 worldPos = combatant.transform.position + worldOffset;
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPos);
+
+        if (screenPos.z < 0)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
+        gameObject.SetActive(true);
+        rectTransform.position = screenPos;
     }
 }

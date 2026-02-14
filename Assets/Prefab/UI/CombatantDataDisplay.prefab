@@ -595,6 +595,8 @@ MonoBehaviour:
   - {fileID: 3213420517971128218}
   - {fileID: 5223627710204573398}
   txtAP: {fileID: 4663404412619178161}
+  followWorldPosition: 0
+  worldOffset: {x: 0, y: 40, z: 0}
   lerpSpeed: 3
 --- !u!1 &5184817285767324526
 GameObject:
@@ -842,7 +844,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 17.839722, y: 0, z: 0, w: 0}
+  m_margin: {x: -14.847374, y: 0, z: -26.189613, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

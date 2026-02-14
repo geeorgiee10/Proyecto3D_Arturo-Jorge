@@ -184,9 +184,32 @@ public class TurnManager : MonoBehaviour
         StartTurn();
     }
 
+    private void HighlightTurn(Combatant active)
+    {
+        foreach (Combatant c in combatants)
+        {
+            if (c == active)
+                c.SetOpaque();
+            else
+                c.SetTranslucent();
+        }
+    }
+
+    private void HighlightTargets(Combatant attacker)
+    {
+        foreach (Combatant c in combatants)
+            c.SetTranslucent();
+
+        attacker.SetOpaque();
+
+        foreach (Combatant target in selectedTargets)
+            target.SetOpaque();
+    }
+
     public void StartTurn()
     {
         Combatant combatant = combatants[currentIndex];
+        HighlightTurn(combatant);
         
         selectedAbility = null;
         selectedTargets = new List<Combatant>();
@@ -369,6 +392,8 @@ public class TurnManager : MonoBehaviour
         
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
+        HighlightTargets(combatants[currentIndex]);
+
         if(selectedAbility == null)
             StartCoroutine(ShowBasicAttack());
         else{
@@ -502,6 +527,8 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        foreach (Combatant c in combatants)
+            c.SetOpaque();
         combatants[currentIndex].EndTurn();
         currentIndex = (currentIndex + 1) % combatants.Count;
         currentAction = Action.SelectingAbility;
