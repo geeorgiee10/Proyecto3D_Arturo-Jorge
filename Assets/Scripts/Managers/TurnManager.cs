@@ -40,6 +40,8 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private BattleCameraController cameraController;
     [SerializeField] private Transform enemyAttackCameraPos;
 
+    public TextMeshProUGUI txtDebug;
+
 
     private enum Action
     {
@@ -92,6 +94,13 @@ public class TurnManager : MonoBehaviour
 
     void Update()
     {
+        string debug = "";
+        foreach(Combatant c in combatants)
+        {
+            debug += c.name+"\n";
+        }
+        txtDebug.text = debug;
+
         if(currentAction == Action.SelectingAbility)
             HandleSelectAbility();
         if(currentAction == Action.SelectingEnemyTarget)

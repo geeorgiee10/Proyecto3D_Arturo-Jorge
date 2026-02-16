@@ -25,7 +25,7 @@ public class BattleCardUi : MonoBehaviour
         { Effect.OutOfTempo, "#dfa945" },
         { Effect.OutOfTune, "#9b569b" },
         { Effect.Microtone, "#470070" },
-        { Effect.Silence, "#808080" },
+        { Effect.Silence, "#222" },
         { Effect.PerfectTempo, "#2056ba" },
         { Effect.Tuned, "#64a964" },
         { Effect.Extasis, "#cc2d6f" },
