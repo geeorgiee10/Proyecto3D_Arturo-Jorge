@@ -30,7 +30,7 @@ public class EquipmentManager : MonoBehaviour
         EquipInternal(ability);
     }
 
-    void EquipInternal( ItemSO item /*bool isWeapon*/)
+    void EquipInternal( ItemSO item)
     {
         foreach (var character in characters)
         {
@@ -39,19 +39,7 @@ public class EquipmentManager : MonoBehaviour
                     character.EquipWeapon(item);
             if(item.ability != null)
                 if(item.ability.element == character.element)
-                    character.EquipAbility(item);
-
-
-
-            // if(isWeapon && item.weapon == null)
-                
-            // if (character.element == item.element)
-            // {
-            //     if (isWeapon)
-            //     else
-            //         character.EquipAbility(item);
-            //     return;
-            // }
+                    character.ToggleAbility(item);
         }
 
     }
