@@ -19,6 +19,46 @@ public class Combatant : MonoBehaviour
     public Ability[] abilities;
 
     private Dictionary<StatusEffect, int> effects = new Dictionary<StatusEffect, int>();
+    [SerializeField] private Transform cameraAnchor;
+
+    private Renderer[] renderers;
+    private float defaultAlpha = 1f;
+
+    void Awake()
+    {
+        renderers = GetComponentsInChildren<Renderer>();
+    }
+
+    public void SetAlpha(float alpha)
+    {
+        foreach (Renderer r in renderers)
+        {
+            foreach (Material m in r.materials)
+            {
+                Color c = m.color;
+                c.a = alpha;
+                m.color = c;
+            }
+        }
+    }
+
+    public void SetOpaque()
+    {
+        SetAlpha(1f);
+    }
+
+    public void SetTranslucent()
+    {
+        SetAlpha(0.25f);
+    }
+
+    public Transform GetCameraAnchor()
+    {
+        if (cameraAnchor == null)
+            return transform; // fallback seguro
+
+        return cameraAnchor;
+    }
 
     void Update()
     {

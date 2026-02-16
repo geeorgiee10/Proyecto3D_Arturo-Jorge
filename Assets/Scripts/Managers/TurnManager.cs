@@ -36,6 +36,11 @@ public class TurnManager : MonoBehaviour
     [Header("Sound")]
     [SerializeField] private AudioSource perfectComplete;
 
+    [Header("Camera Management")]
+    [SerializeField] private BattleCameraController cameraController;
+    [SerializeField] private Transform enemyAttackCameraPos;
+
+
     private enum Action
     {
         SelectingAbility,
@@ -179,9 +184,32 @@ public class TurnManager : MonoBehaviour
         StartTurn();
     }
 
+    private void HighlightTurn(Combatant active)
+    {
+        foreach (Combatant c in combatants)
+        {
+            if (c == active)
+                c.SetOpaque();
+            else
+                c.SetTranslucent();
+        }
+    }
+
+    private void HighlightTargets(Combatant attacker)
+    {
+        foreach (Combatant c in combatants)
+            c.SetTranslucent();
+
+        attacker.SetOpaque();
+
+        foreach (Combatant target in selectedTargets)
+            target.SetOpaque();
+    }
+
     public void StartTurn()
     {
         Combatant combatant = combatants[currentIndex];
+        HighlightTurn(combatant);
         
         selectedAbility = null;
         selectedTargets = new List<Combatant>();
@@ -194,6 +222,12 @@ public class TurnManager : MonoBehaviour
 
         if (combatant.GetTeam() == Team.Hero)
         {
+            Vector3 enemyCenter = new Vector3(0f, 1.5f, 6f);
+            cameraController.MoveTo(
+                combatant.GetCameraAnchor(),
+                null,
+                enemyCenter
+            );
 
             selectActionPanel.SetActive(true);
             chooseTargetPanel.SetActive(false);
@@ -216,6 +250,10 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
+            cameraController.MoveTo(
+                enemyAttackCameraPos,
+                combatant.transform
+            );
 
             selectActionPanel.SetActive(false);
             chooseTargetPanel.SetActive(false);
@@ -354,6 +392,8 @@ public class TurnManager : MonoBehaviour
         
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
+        HighlightTargets(combatants[currentIndex]);
+
         if(selectedAbility == null)
             StartCoroutine(ShowBasicAttack());
         else{
@@ -487,6 +527,8 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
+        foreach (Combatant c in combatants)
+            c.SetOpaque();
         combatants[currentIndex].EndTurn();
         currentIndex = (currentIndex + 1) % combatants.Count;
         currentAction = Action.SelectingAbility;
