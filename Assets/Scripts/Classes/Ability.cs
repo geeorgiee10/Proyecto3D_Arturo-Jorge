@@ -57,7 +57,7 @@ public class Ability : ScriptableObject
         }
         else if (damage < 0)
         {
-            target.health += Mathf.RoundToInt(value * finalMultiplier);
+            target.health -= Mathf.RoundToInt(value * finalMultiplier);
 
             if (target.health > target.maxHealth)
                 target.health = target.maxHealth;

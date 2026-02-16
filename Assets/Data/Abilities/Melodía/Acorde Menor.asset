@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df6cff8c3c1be164bb2112b26296af71, type: 3}
-  m_Name: Acorde Mayor
+  m_Name: Acorde Menor
   m_EditorClassIdentifier: Assembly-CSharp::Ability
-  name: Acorde Mayor
-  description: "Restaura una peque\xF1a porci\xF3n de la vida de un aliado, aplicando
-    tambi\xE9n {EFFECT}"
-  damage: -10
-  type: 2
-  target: 3
-  element: 2
-  statusEffect: {fileID: 11400000, guid: 4a3aeeb460f6c1345abc0d4401ba3e72, type: 2}
-  qtePattern: {fileID: 11400000, guid: 3950577e00462194d91e8c3f5b8d8a6b, type: 2}
+  name: Acorde Menor
+  description: "Da\xF1o medio de {ELEMENT} a un enemigo"
+  damage: 15
+  type: 0
+  target: 0
+  element: 1
+  statusEffect: {fileID: 0}
+  qtePattern: {fileID: 11400000, guid: 4137679a343a4f241b3ddecf58b33410, type: 2}
   cost: 3
