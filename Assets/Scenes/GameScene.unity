@@ -5990,7 +5990,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 292.3, y: -208}
-  m_SizeDelta: {x: 393.62, y: 700}
+  m_SizeDelta: {x: 393.62, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &429667896
 MonoBehaviour:
@@ -13768,7 +13768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7faca32955c719429c14d3f70b94b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterEquipment
-  element: 1
+  element: 2
   equippedWeapon: {fileID: 0}
   equippedAbilities:
   - {fileID: 0}
@@ -14873,7 +14873,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 700.73, y: -208}
-  m_SizeDelta: {x: 423.2346, y: 700}
+  m_SizeDelta: {x: 423.2346, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1147700761
 MonoBehaviour:
@@ -16132,31 +16132,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1988.5767
+      value: 1427.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 186.98389
+      value: -23.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -277.8541
+      value: -955.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.97153056
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.23691447
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -16164,7 +16164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -27.409
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 289eeb2e9a0863c4f98b3c90ef44715c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -16238,7 +16238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7faca32955c719429c14d3f70b94b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterEquipment
-  element: 0
+  element: 3
   equippedWeapon: {fileID: 0}
   equippedAbilities:
   - {fileID: 0}
@@ -17309,7 +17309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7faca32955c719429c14d3f70b94b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterEquipment
-  element: 2
+  element: 1
   equippedWeapon: {fileID: 0}
   equippedAbilities:
   - {fileID: 0}
@@ -18409,31 +18409,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1427.6
+      value: 1988
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -23.1
+      value: 186.9839
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -955.1
+      value: -277.8541
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.97153115
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.23691204
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -18441,7 +18441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -27.409
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de7907834a3518047a014ae42fae792d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -18516,7 +18516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7faca32955c719429c14d3f70b94b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterEquipment
-  element: 3
+  element: 0
   equippedWeapon: {fileID: 0}
   equippedAbilities:
   - {fileID: 0}
@@ -22091,7 +22091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1725443236
 MonoBehaviour:
   m_ObjectHideFlags: 0
