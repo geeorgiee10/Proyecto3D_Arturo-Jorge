@@ -2,10 +2,10 @@ public static class ElementChart
 {
     private static readonly float[,] chart =
     {
-        { 1f, 2f, 0.5f, 1f },
-        { 0.5f, 1f, 1f, 2f },
-        { 2f, 1f, 1f, 0.5f },
-        { 1f, 0.5f, 2f, 1f }
+        { 1f, 1.5f, .75f, 1f },
+        { .75f, 1f, 1f, 1.5f },
+        { 1.5f, 1f, 1f, .75f },
+        { 1f, .75f, 1.5f, 1f }
     };
 
     private static readonly string[,] text =

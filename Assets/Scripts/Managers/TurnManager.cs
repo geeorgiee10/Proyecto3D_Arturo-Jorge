@@ -100,7 +100,7 @@ public class TurnManager : MonoBehaviour
         {
             txtTurns.text += i == currentIndex 
                 ? "<size=140%><color=#FFD700>" + combatants[i].name + "</color></size>\n"
-                : combatants[i].name + "\n";
+                : (combatants[i].team == Team.Enemy ? "<color=#E68983>"+combatants[i].name+"</color>" : "<color=#83E6DD>"+combatants[i].name+"</color>") + "\n";
         }
 
 
