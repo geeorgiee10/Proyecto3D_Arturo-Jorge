@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ public class QTEManager : MonoBehaviour
     public int MissCount { get; private set; }
 
     private int beatPoints = 0;
+
+    [SerializeField] private TextMeshProUGUI txtCompas;
 
 
     [Header("Validate Beat")]
@@ -65,8 +68,9 @@ public class QTEManager : MonoBehaviour
         GoodCount = 0;
         MissCount = 0;
 
-        float timelineSize = timeline.sizeDelta.x;
+        float timelineSize = timeline.sizeDelta.x - 20;
         beatPoints = pattern.sequence.Length + 1;
+        txtCompas.text = ""+(beatPoints - 1);
 
         float spacing = timelineSize / beatPoints;
         float lastPosition = spacing - (timelineSize / 2f);

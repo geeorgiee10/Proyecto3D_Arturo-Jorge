@@ -49,12 +49,6 @@ public class BattleManager : MonoBehaviour
         SetupTeamPositions(HeroTeam, true);
         SetupTeamPositions(EnemyTeam, false);
 
-        // foreach (Combatant c in HeroTeam.GetComponentsInChildren<Combatant>())
-        //     turnManager.AddCombatant(c);
-
-        // foreach (Combatant c in EnemyTeam.GetComponentsInChildren<Combatant>())
-        //     turnManager.AddCombatant(c);
-
         turnManager.StartBattle();
     }
 
@@ -66,7 +60,7 @@ public class BattleManager : MonoBehaviour
         if (count == 0)
             return;
 
-        float planeWidth = 20f; // ancho total disponible
+        float planeWidth = 15f;
         float spacing = planeWidth / Mathf.Max(count, 1);
 
         float startOffset = -((count - 1) * spacing) / 2f;
@@ -82,7 +76,6 @@ public class BattleManager : MonoBehaviour
 
             t.localPosition = localPos;
 
-            // Opcional: girarlos automáticamente
             if (isHero)
                 t.forward = Vector3.forward;
             else

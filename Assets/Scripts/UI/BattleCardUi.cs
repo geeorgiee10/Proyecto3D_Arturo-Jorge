@@ -15,7 +15,7 @@ public class BattleCardUi : MonoBehaviour
     [SerializeField] TextMeshProUGUI txtAP;
 
     public bool followWorldPosition = false;
-    public Vector3 worldOffset = new Vector3(0, 3f, 0);
+    public Vector3 worldOffset = new Vector3(0, 1f, 0);
 
     private Camera mainCamera;
     private RectTransform rectTransform;
@@ -43,7 +43,7 @@ public class BattleCardUi : MonoBehaviour
 
     void Update()
     {
-        txtName.text = combatant.name;
+        txtName.text = combatant.hasTurn ? "<size=140%><color=#FFD700>" + combatant.name + "</color></size>\n" : combatant.name;
         txtHealth.text = combatant.health + "/" + combatant.maxHealth;
         txtAP.text = ""+combatant.abilityPoints;
 
@@ -93,13 +93,6 @@ public class BattleCardUi : MonoBehaviour
         {
             if(i+1 <= combatant.abilityPoints)
                 imgAP[i].color = new Color(0, 1, 1, 1);
-        }
-
-        if(combatant.team == Team.Enemy)
-        {
-            foreach(Image i in imgAP)
-                i.color = new Color(1, 1, 1, 0);
-            txtAP.text = "";
         }
     }
 
