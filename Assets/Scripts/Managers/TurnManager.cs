@@ -40,7 +40,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private BattleCameraController cameraController;
     [SerializeField] private Transform enemyAttackCameraPos;
 
-    public TextMeshProUGUI txtDebug;
+    public TextMeshProUGUI txtTurns;
 
 
     private enum Action
@@ -94,12 +94,15 @@ public class TurnManager : MonoBehaviour
 
     void Update()
     {
-        string debug = "";
-        foreach(Combatant c in combatants)
+        txtTurns.text = "";
+
+        for(int i = currentIndex; i < combatants.Count; i++)
         {
-            debug += c.name+"\n";
+            txtTurns.text += i == currentIndex 
+                ? "<size=140%><color=#FFD700>" + combatants[i].name + "</color></size>\n"
+                : (combatants[i].team == Team.Enemy ? "<color=#E68983>"+combatants[i].name+"</color>" : "<color=#83E6DD>"+combatants[i].name+"</color>") + "\n";
         }
-        txtDebug.text = debug;
+
 
         if(currentAction == Action.SelectingAbility)
             HandleSelectAbility();
@@ -109,6 +112,9 @@ public class TurnManager : MonoBehaviour
             HandleSelectAllyTarget();
         if(currentAction == Action.Confirming)
             HandleConfirm();
+        
+        if(combatants[currentIndex].team == Team.Enemy)
+            qtePanel.SetActive(false);
     }
 
     void HandleSelectAbility()
@@ -193,32 +199,13 @@ public class TurnManager : MonoBehaviour
         StartTurn();
     }
 
-    private void HighlightTurn(Combatant active)
-    {
-        foreach (Combatant c in combatants)
-        {
-            if (c == active)
-                c.SetOpaque();
-            else
-                c.SetTranslucent();
-        }
-    }
-
-    private void HighlightTargets(Combatant attacker)
-    {
-        foreach (Combatant c in combatants)
-            c.SetTranslucent();
-
-        attacker.SetOpaque();
-
-        foreach (Combatant target in selectedTargets)
-            target.SetOpaque();
-    }
-
     public void StartTurn()
     {
+        foreach(Combatant c in combatants)
+            c.hasTurn = false;
+
         Combatant combatant = combatants[currentIndex];
-        HighlightTurn(combatant);
+        combatant.hasTurn = true;
         
         selectedAbility = null;
         selectedTargets = new List<Combatant>();
@@ -279,7 +266,24 @@ public class TurnManager : MonoBehaviour
             }
 
             txtTurnTitle.text = "Turno de "+combatant.name;
+            
+            if (ShouldUseBasicAttack(combatant))
+            {
+                selectedAbility = null;
+                selectedTargets.Add(GetRandomHero());
+                StartCoroutine(ShowBasicAttack());
+                return;
+            }
+
             selectedAbility = ChooseRandomAbility(combatant);
+
+            if (selectedAbility == null)
+            {
+                selectedTargets.Add(GetRandomHero());
+                StartCoroutine(ShowBasicAttack());
+                return;
+            }
+            combatant.abilityPoints -= selectedAbility.cost;
 
             if(selectedAbility.target == AttackTarget.Ally)
                 selectedTargets.Add(GetRandomEnemy());
@@ -401,7 +405,6 @@ public class TurnManager : MonoBehaviour
         
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
-        HighlightTargets(combatants[currentIndex]);
 
         if(selectedAbility == null)
             StartCoroutine(ShowBasicAttack());
@@ -439,9 +442,20 @@ public class TurnManager : MonoBehaviour
         currentAction = Action.Attacking;
         Combatant combatant = combatants[currentIndex];
 
-        string actionText = combatant.name + " usa " +
-                            selectedAbility.name + " contra " +
-                            (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los adversarios");
+        string actionText = "";
+        
+        if(selectedAbility.target == AttackTarget.Ally || selectedAbility.target == AttackTarget.AllyTeam)
+        {
+            actionText = combatant.name + " usa " +
+                         selectedAbility.name + " con " +
+                        (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los aliados");
+        }
+        else
+        {
+            actionText = combatant.name + " usa " +
+                         selectedAbility.name + " contra " +
+                        (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los adversarios");
+        }
         txtTurnTitle.text = actionText;
 
         float multiplier = 1f;
@@ -454,7 +468,7 @@ public class TurnManager : MonoBehaviour
                 combatant.HasEffect(Effect.Microtone)
             );
             qteManager.ShowBeats(selectedAbility.qtePattern);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
             Coroutine progressRoutine = qteManager.StartMoveProgressBar();
             yield return progressRoutine;
@@ -536,8 +550,6 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn()
     {
-        foreach (Combatant c in combatants)
-            c.SetOpaque();
         combatants[currentIndex].EndTurn();
         currentIndex = (currentIndex + 1) % combatants.Count;
         currentAction = Action.SelectingAbility;
@@ -553,7 +565,74 @@ public class TurnManager : MonoBehaviour
     private List<Combatant> GetEnemies() => combatants.FindAll(c => c.GetTeam() == Team.Enemy && !c.dead);
     private List<Combatant> GetHeroes() => combatants.FindAll(c => c.GetTeam() == Team.Hero && !c.dead);
 
-    private Ability ChooseRandomAbility(Combatant enemy) => enemy.GetAbilities()[Random.Range(0, enemy.GetAbilities().Length)];
+    private Ability ChooseRandomAbility(Combatant enemy)
+    {
+        Ability[] abilities = enemy.GetAbilities();
+
+        List<Ability> usable = new List<Ability>();
+        foreach (Ability a in abilities)
+        {
+            if (enemy.abilityPoints >= a.cost)
+                usable.Add(a);
+        }
+
+        if (usable.Count == 0)
+            return null;
+
+        float totalCost = 0f;
+        foreach (Ability a in usable)
+            totalCost += a.cost;
+
+        float totalWeight = 0f;
+        foreach (Ability a in usable)
+            totalWeight += (totalCost - a.cost);
+
+        float randomValue = Random.Range(0f, totalWeight);
+
+        float cumulative = 0f;
+
+        foreach (Ability a in usable)
+        {
+            float weight = totalCost - a.cost;
+            cumulative += weight;
+
+            if (randomValue <= cumulative)
+                return a;
+        }
+
+        return usable[0];
+    }
+
+    private bool ShouldUseBasicAttack(Combatant enemy)
+    {
+        // Si no puede pagar ninguna habilidad → básico obligatorio
+        Ability[] abilities = enemy.GetAbilities();
+        bool canUseAny = false;
+
+        foreach (Ability a in abilities)
+        {
+            if (enemy.abilityPoints >= a.cost)
+            {
+                canUseAny = true;
+                break;
+            }
+        }
+
+        if (!canUseAny)
+            return true;
+
+        // Cuantos menos puntos tenga, más probable es que ataque básico
+        float basicChance;
+
+        if (enemy.abilityPoints <= 2)
+            basicChance = 0.6f;   // 60% básico
+        else if (enemy.abilityPoints <= 4)
+            basicChance = 0.35f;  // 35% básico
+        else
+            basicChance = 0.15f;  // 15% básico
+
+        return Random.value < basicChance;
+    }
 
     private Combatant GetRandomHero() => GetHeroes()[Random.Range(0, GetHeroes().Count)];
     private Combatant GetRandomEnemy() => GetEnemies()[Random.Range(0, GetEnemies().Count)];

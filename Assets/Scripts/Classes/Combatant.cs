@@ -21,41 +21,17 @@ public class Combatant : MonoBehaviour
     private Dictionary<StatusEffect, int> effects = new Dictionary<StatusEffect, int>();
     [SerializeField] private Transform cameraAnchor;
 
-    private Renderer[] renderers;
     private float defaultAlpha = 1f;
 
-    void Awake()
-    {
-        renderers = GetComponentsInChildren<Renderer>();
-    }
+    public bool hasTurn = false;
+    [SerializeField] private GameObject render;
+    [SerializeField] private Light light;
 
-    public void SetAlpha(float alpha)
-    {
-        foreach (Renderer r in renderers)
-        {
-            foreach (Material m in r.materials)
-            {
-                Color c = m.color;
-                c.a = alpha;
-                m.color = c;
-            }
-        }
-    }
-
-    public void SetOpaque()
-    {
-        SetAlpha(1f);
-    }
-
-    public void SetTranslucent()
-    {
-        SetAlpha(0.25f);
-    }
 
     public Transform GetCameraAnchor()
     {
         if (cameraAnchor == null)
-            return transform; // fallback seguro
+            return transform;
 
         return cameraAnchor;
     }
@@ -68,6 +44,10 @@ public class Combatant : MonoBehaviour
             int duration = kvp.Value;
         }
 
+        light.color = dead ? Color.red : Color.white;
+        light.intensity = hasTurn ? 5f : dead ? 5f : .5f;
+        render.GetComponent<Animator>().SetBool("Dead", dead);
+
         if(abilityPoints > 9) abilityPoints = 9;
         if(abilityPoints < 0) abilityPoints = 0;
     }
@@ -76,9 +56,7 @@ public class Combatant : MonoBehaviour
     public void AddEffect(StatusEffect effect)
     {
         if (effects.ContainsKey(effect))
-        {
             effects[effect] = Mathf.Max(effects[effect], effect.remainingTurns);
-        }
         else
         {
             effects.Add(effect, effect.remainingTurns);
