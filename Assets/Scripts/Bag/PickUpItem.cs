@@ -12,6 +12,8 @@ public class PickUpItem : MonoBehaviour
     private bool playerInRange;           
     private bool itemPickedUp; 
 
+    [SerializeField] private AudioSource audioSourcePickUp;
+
 
     void Start()
     {
@@ -28,6 +30,8 @@ public class PickUpItem : MonoBehaviour
             Bag.Instance.AddItem(item);    
 
             PickUpText.Instance.showText(item.itemName);
+
+            PlayerMovement.Instance.PickUpAudio();
 
             itemPickedUp = true;                 
             Destroy(gameObject);                 
