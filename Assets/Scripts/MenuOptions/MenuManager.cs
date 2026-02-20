@@ -28,6 +28,10 @@ public class MenuManager : MonoBehaviour
 
     public bool SubMenuUsing = false;
 
+    public AudioSource audioNavigateMenu;
+    public AudioSource audioSelectMenu;
+    public AudioSource audioOpenMenu;
+
     void Awake()
     {
 
@@ -74,6 +78,8 @@ public class MenuManager : MonoBehaviour
         // Abrir/cerrar menú
         if(keyboard.escapeKey.wasPressedThisFrame && !SubMenuUsing)
         {
+            if(audioOpenMenu != null)
+                audioOpenMenu.Play();
             if(menuActive)
                 StartCoroutine(HideMenu());
             else
@@ -90,12 +96,16 @@ public class MenuManager : MonoBehaviour
         // Navegar opciones
         if(keyboard.wKey.wasPressedThisFrame)
         {
+            if(audioNavigateMenu != null)
+                audioNavigateMenu.Play();
             selectedIndex--;
             if(selectedIndex < 0) selectedIndex = options.Count - 1;
             UpdateSelection();
         }
         if(keyboard.sKey.wasPressedThisFrame)
         {
+            if(audioNavigateMenu != null)
+                audioNavigateMenu.Play();
             selectedIndex++;
             if(selectedIndex >= options.Count) selectedIndex = 0;
             UpdateSelection();
@@ -104,6 +114,8 @@ public class MenuManager : MonoBehaviour
         // Seleccionar opción
         if(!bagUI.activeSelf && keyboard.enterKey.wasPressedThisFrame && !SubMenuUsing)
         {
+            if(audioSelectMenu != null)
+                audioSelectMenu.Play();
             SelectOption();
         }
 

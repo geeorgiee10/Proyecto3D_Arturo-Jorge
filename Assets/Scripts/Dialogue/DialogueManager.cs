@@ -25,6 +25,9 @@ public class DialogueManager : MonoBehaviour
     private Coroutine typingCoroutine;
     private bool isTyping;
 
+    public AudioSource audioDialogue;
+    public AudioSource audioDialogue2;
+
     
     private Keyboard keyboard;
     void Awake()
@@ -72,10 +75,17 @@ public class DialogueManager : MonoBehaviour
         justStarted = true;
 
         dialoguePanel.SetActive(true);
+        
 
         npcNameText.text = dialogue.npcName;
         lines = dialogue.lines;
         index = 0;
+
+        int randomAudio = Random.Range(0, 2);
+        if(randomAudio == 0 && audioDialogue != null)
+            audioDialogue.Play();
+        else if(randomAudio == 1 && audioDialogue2 != null)
+            audioDialogue2.Play();
 
         StartTypingLine(lines[index]);
 

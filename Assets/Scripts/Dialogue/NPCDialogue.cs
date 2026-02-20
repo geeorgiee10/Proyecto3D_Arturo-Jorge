@@ -10,6 +10,8 @@ public class NPCDialogue : MonoBehaviour
 
     private Keyboard keyboard;
 
+    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,6 +27,7 @@ public class NPCDialogue : MonoBehaviour
         {
             TalkIndicator.Instance.Hide();
             DialogueManager.Instance.StartDialogue(dialogue);
+            
             dialogueStarted = true;
         }
     }
