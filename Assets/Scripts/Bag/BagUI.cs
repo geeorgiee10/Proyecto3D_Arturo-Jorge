@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using System;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class BagUI : MonoBehaviour
 {
@@ -33,6 +34,13 @@ public class BagUI : MonoBehaviour
     private bool weaponsSelected = true;
 
     private Keyboard keyboard;
+
+
+    [Header("Music")]
+        public AudioSource audioChangeOption;
+        public AudioSource audioConfirm;
+        public AudioSource audioCancel;
+        public AudioSource changeItemsMusic;
 
     void OnEnable()
     {
@@ -93,6 +101,8 @@ public class BagUI : MonoBehaviour
         //Change selection (weapons/abilities)
         if(keyboard.tabKey.wasPressedThisFrame)
         {
+            if(audioChangeOption != null)
+                audioChangeOption.Play();
             weaponsSelected = !weaponsSelected;
             selectedIndex = 0;
             UpdateSelection();
@@ -103,6 +113,8 @@ public class BagUI : MonoBehaviour
 
         if(keyboard.sKey.wasPressedThisFrame)
         {
+            if(changeItemsMusic != null)
+                changeItemsMusic.Play();
             selectedIndex++;
             if(selectedIndex >= currentList.Count) 
                 selectedIndex = 0;
@@ -111,6 +123,8 @@ public class BagUI : MonoBehaviour
 
         if(keyboard.wKey.wasPressedThisFrame)
         {
+            if(changeItemsMusic != null)
+                changeItemsMusic.Play();
             selectedIndex--;
             if(selectedIndex < 0) 
                 selectedIndex = currentList.Count - 1;
@@ -119,6 +133,8 @@ public class BagUI : MonoBehaviour
 
         if(keyboard.spaceKey.wasPressedThisFrame && !submenuOpen)
         {
+            if(audioConfirm != null)
+                audioConfirm.Play();
             if(currentList.Count > 0)
                 MenuManager.Instance.SubMenuUsing = true;
                 OpenSubmenu(currentList[selectedIndex]);
@@ -129,6 +145,8 @@ public class BagUI : MonoBehaviour
             // Change submenu selection
             if(keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)
             {
+                if(changeItemsMusic != null)
+                    changeItemsMusic.Play();
                 submenuIndex = 1 - submenuIndex; 
                 UpdateSubmenuSelection();
             }
@@ -136,6 +154,8 @@ public class BagUI : MonoBehaviour
             // Confirm
             if(keyboard.enterKey.wasPressedThisFrame)
             {
+                if(audioConfirm != null)
+                    audioConfirm.Play();
                 if(submenuIndex == 0) // Equip
                 {
                     EquipItem(currentSelectedItem);
@@ -188,6 +208,8 @@ public class BagUI : MonoBehaviour
 
     public void CloseSubmenu()
     {
+        if(audioCancel != null)
+            audioCancel.Play();
         submenuUI.SetActive(false);
         submenuOpen = false;
         MenuManager.Instance.SubMenuUsing = false;
