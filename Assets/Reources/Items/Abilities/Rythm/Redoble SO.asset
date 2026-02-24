@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75577ab19b2455f4696ed4ff58f61d12, type: 3}
-  m_Name: Armonia
+  m_Name: Redoble SO
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Armonia
-  ability: {fileID: 11400000, guid: 00f0043e168bdd3489e220d596fecd5f, type: 2}
+  itemName: Redoble
+  ability: {fileID: 11400000, guid: ad0e5967982034e4bb203d65ca90aaba, type: 2}
   weapon: {fileID: 0}

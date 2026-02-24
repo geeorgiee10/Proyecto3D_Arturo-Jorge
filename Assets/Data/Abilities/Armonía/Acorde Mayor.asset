@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Acorde Mayor
   description: "Restaura una peque\xF1a porci\xF3n de la vida de un aliado, aplicando
     tambi\xE9n {EFFECT}"
-  damage: -10
+  damage: -30
   type: 2
   target: 3
   element: 2
