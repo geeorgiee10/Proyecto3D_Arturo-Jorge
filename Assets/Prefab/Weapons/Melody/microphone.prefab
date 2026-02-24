@@ -130,8 +130,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 502.52982, y: 485.46518, z: 240.76883}
-  m_Center: {x: -33.600952, y: -13.65664, z: 96.37292}
+  m_Size: {x: 752.8229, y: 580.2112, z: 327.466}
+  m_Center: {x: -30.67627, y: 33.716156, z: 139.72142}
 --- !u!23 &3725740659619122705
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -194,3 +194,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickUpItem
   item: {fileID: 11400000, guid: 097fcb7864b8e084ba4cda8c3befd31c, type: 2}
+  audioSourcePickUp: {fileID: 0}

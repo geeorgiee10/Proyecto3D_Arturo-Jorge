@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75577ab19b2455f4696ed4ff58f61d12, type: 3}
-  m_Name: Bateria
+  m_Name: Bateria Ominosa
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Bateria
+  itemName: Bateria Ominosa
   ability: {fileID: 0}
   weapon: {fileID: 11400000, guid: b921b42262b948644b5d7e230a5f88a5, type: 2}
