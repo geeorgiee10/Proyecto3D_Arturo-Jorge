@@ -2885,22 +2885,8 @@ MonoBehaviour:
     element: 2
     team: 0
     abilities:
-    - {fileID: 11400000, guid: 00f0043e168bdd3489e220d596fecd5f, type: 2}
-    - {fileID: 11400000, guid: 3207b036d142c134394000f4f46ccb7f, type: 2}
-  - slotIndex: 1
-    name: "P\xE1rsifal"
-    maxHealth: 200
-    health: 200
-    strength: 7
-    speed: 6
-    initiative: 0
-    abilityPoints: 3
-    weapon: {fileID: 11400000, guid: 06da51fe07888e84fa31d9f5221ec61e, type: 2}
-    element: 1
-    team: 0
-    abilities:
-    - {fileID: 11400000, guid: 0d3b41098bb39b347a68ef3afbaeea79, type: 2}
-    - {fileID: 11400000, guid: e135d9e76d715984eb1478d641aba82c, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
   displays:
   - {fileID: 348744778}
   - {fileID: 108794484}
