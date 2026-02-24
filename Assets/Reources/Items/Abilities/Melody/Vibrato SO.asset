@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75577ab19b2455f4696ed4ff58f61d12, type: 3}
-  m_Name: Melodia
+  m_Name: Vibrato SO
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Melodia
-  ability: {fileID: 11400000, guid: e135d9e76d715984eb1478d641aba82c, type: 2}
+  itemName: Vibrato
+  ability: {fileID: 11400000, guid: a32335c62a1377a45ba901cf3e7ae78d, type: 2}
   weapon: {fileID: 0}

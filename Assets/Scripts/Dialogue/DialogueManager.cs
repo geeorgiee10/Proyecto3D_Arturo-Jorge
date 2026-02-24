@@ -12,6 +12,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject dialoguePanel;
     public TextMeshProUGUI npcNameText;
     public TextMeshProUGUI dialogueText;
+    public GameObject enemy;
 
     
     [Header("Texto")]
@@ -69,8 +70,9 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DialogueSO dialogue)
+    public void StartDialogue(DialogueSO dialogue, GameObject go)
     {
+        enemy = go;
         dialogueActive = true;
         justStarted = true;
 
@@ -134,5 +136,10 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
 
         PlayerMovement.Instance.canMove = true;
+
+        BattleStarter bs = enemy.gameObject.GetComponent<BattleStarter>();
+        
+        if(bs != null)
+            bs.StartBattle();
     }
 }

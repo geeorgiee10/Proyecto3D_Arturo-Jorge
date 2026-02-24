@@ -225,12 +225,16 @@ public class BagUI : MonoBehaviour
             if(CharacterEquipment.Instance.equippedWeapon == weapon)
             {
                 CharacterEquipment.Instance.equippedWeapon = null;
+                PlayerParty.Instance.UnequipWeapon(weapon.weapon);
                 equipText.text = "• Equipar";
             }
             else
             {
                 if (weapon != null)
+                {
                     EquipmentManager.Instance.EquipWeapon(weapon);
+                    PlayerParty.Instance.EquipWeapon(weapon.weapon);
+                }
                 equipText.text = "• Desequipar";
             }
         }

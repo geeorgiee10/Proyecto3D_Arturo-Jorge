@@ -7,15 +7,15 @@ public class NPCDialogue : MonoBehaviour
     public DialogueSO dialogue;
     private bool playerInRange;
     private bool dialogueStarted;
+    private GameObject enemy;
 
     private Keyboard keyboard;
-
-    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         keyboard = Keyboard.current;
+        enemy = this.gameObject;
     }
 
     // Update is called once per frame
@@ -26,8 +26,7 @@ public class NPCDialogue : MonoBehaviour
         if (!dialogueStarted && keyboard.eKey.wasPressedThisFrame)
         {
             TalkIndicator.Instance.Hide();
-            DialogueManager.Instance.StartDialogue(dialogue);
-            
+            DialogueManager.Instance.StartDialogue(dialogue, enemy);
             dialogueStarted = true;
         }
     }

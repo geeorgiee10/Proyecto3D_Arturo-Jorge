@@ -25,18 +25,7 @@ public class CharacterEquipment : MonoBehaviour
     public void EquipWeapon(ItemSO weapon)
     {
         equippedWeapon = weapon;
-        Debug.Log($"{gameObject.name} equipó arma {weapon.itemName}");
     }
-
-    /*public void EquipAbility(ItemSO ability)
-    {
-        equippedAbilities[nextAbilitySlot] = ability;
-        Debug.Log($"{gameObject.name} equipó habilidad {ability.itemName} en slot {nextAbilitySlot}");
-
-        nextAbilitySlot++;
-        if (nextAbilitySlot >= equippedAbilities.Length)
-            nextAbilitySlot = 0;
-    }*/
 
 
     public bool ToggleAbility(ItemSO ability)

@@ -44,7 +44,8 @@ public class Combatant : MonoBehaviour
             int duration = kvp.Value;
         }
 
-        light.color = dead ? Color.red : Color.white;
+        light.color = dead ? Color.red : new Color(.5f, 1, 1, 0);
+        
         light.intensity = hasTurn ? 5f : dead ? 5f : .5f;
         render.GetComponent<Animator>().SetBool("Dead", dead);
 
