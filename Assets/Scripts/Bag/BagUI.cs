@@ -232,11 +232,12 @@ public class BagUI : MonoBehaviour
         {
             ItemSO ability = Bag.Instance.GetAbilities().Find(i => i.itemName == itemUI.text.text);
 
-            if (ability != null)
-                EquipmentManager.Instance.EquipAbility(ability);
+            if (ability == null)
+                return;
 
+            CharacterEquipment.Instance.ToggleAbility(ability);
 
-            bool nowEquipped = CharacterEquipment.Instance.ToggleAbility(ability);
+            bool nowEquipped = CharacterEquipment.Instance.IsAbilityEquipped(ability);
 
             equipText.text = nowEquipped ? "• Desequipar" : "• Equipar";
         }

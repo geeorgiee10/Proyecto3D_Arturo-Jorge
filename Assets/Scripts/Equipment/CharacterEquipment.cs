@@ -7,17 +7,16 @@ public class CharacterEquipment : MonoBehaviour
     public Element element;
 
     public ItemSO equippedWeapon;
-    public ItemSO[] equippedAbilities = new ItemSO[2];
 
-    private int nextAbilitySlot = 0;
+    public int combatantIndex;
+
+    public Combatant combatant;
 
     void Awake()
     {
 
         if (Instance == null)
         {
-            if (equippedAbilities == null)
-                equippedAbilities = new ItemSO[2];
             Instance = this;
         }
     }
@@ -30,35 +29,58 @@ public class CharacterEquipment : MonoBehaviour
 
     public bool ToggleAbility(ItemSO ability)
     {
-       
-        for (int i = 0; i < equippedAbilities.Length; i++)
+        if (combatantIndex < 0 || combatantIndex >= PlayerParty.Instance.partyMembers.Count)
         {
-            if (equippedAbilities[i] == ability) 
+            return false;
+        }
+        
+        CombatantData cd = PlayerParty.Instance.partyMembers[combatantIndex];
+
+        // Buscar si ya está equipada
+        for (int i = 0; i < cd.abilities.Length; i++)
+        {
+            if (cd.abilities[i] == ability.ability)
             {
-                equippedAbilities[i] = null; 
+                cd.abilities[i] = null;
                 return false;
             }
         }
 
-        
-        int startSlot = nextAbilitySlot;
-        do
+        // Buscar slot vacío
+        for (int i = 0; i < cd.abilities.Length; i++)
         {
-            if (equippedAbilities[nextAbilitySlot] == null)
+            if (cd.abilities[i] == null)
             {
-                equippedAbilities[nextAbilitySlot] = ability;
-                nextAbilitySlot++;
-                if (nextAbilitySlot >= equippedAbilities.Length) nextAbilitySlot = 0;
+                cd.abilities[i] = ability.ability;
                 return true;
             }
+        }
 
-            nextAbilitySlot++;
-            if (nextAbilitySlot >= equippedAbilities.Length) nextAbilitySlot = 0;
+        return false; 
+    }
 
-        } while (nextAbilitySlot != startSlot);
+    public bool IsAbilityEquipped(ItemSO ability)
+    {
+        if (ability == null || PlayerParty.Instance == null)
+        return false;
 
+        // Buscar el miembro de la party con este elemento
+        CombatantData cd = PlayerParty.Instance.partyMembers
+            .Find(c => c.element == element);
+
+        if (cd == null || cd.abilities == null)
+            return false;
+
+        // Buscar la habilidad en sus slots
+        foreach (var a in cd.abilities)
+        {
+            if (a == ability.ability)
+                return true;
+        }
 
         return false;
     }
+
+
 
 }

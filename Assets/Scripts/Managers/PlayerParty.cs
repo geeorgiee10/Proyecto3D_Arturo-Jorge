@@ -34,6 +34,19 @@ public class PlayerParty : MonoBehaviour
                 cd.weapon = w;
     }
 
-    public void EquipAbility(int combatant, int slot, Ability a) => partyMembers[combatant].abilities[slot] = a;
-    public void UnequipAbility(int combatant, int slot) => partyMembers[combatant].abilities[slot] = null;
+    public void EquipAbility(int slot, Ability a)
+    {
+        foreach(CombatantData cd in partyMembers)
+            if(cd.element == a.element)
+                cd.abilities[slot] = a;
+    }
+    public void UnequipAbility(Element element, int slot)
+    {
+        CombatantData cd = partyMembers.Find(c => c.element == element);
+
+        if (cd != null && slot >= 0 && slot < cd.abilities.Length)
+        {
+            cd.abilities[slot] = null;
+        }
+    }
 }
