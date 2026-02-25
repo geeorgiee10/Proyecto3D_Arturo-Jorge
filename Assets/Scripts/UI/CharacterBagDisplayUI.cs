@@ -34,7 +34,14 @@ public class CharacterBagDisplayUI : MonoBehaviour
             default: txtElement.text = "???"; break;
         }
         txtWeapon.text = ""+cd.weapon.name;
-        txtAbility1.text = ""+cd.abilities[0].name;
-        txtAbility2.text = ""+cd.abilities[1].name;
+        if(cd.abilities[0] != null)
+            txtAbility1.text = ""+cd.abilities[0].name;
+        else    
+            txtAbility1.text = "";
+
+        if(cd.abilities[1] != null)
+            txtAbility2.text = ""+cd.abilities[1].name;
+        else
+            txtAbility2.text = "";
     }
 }

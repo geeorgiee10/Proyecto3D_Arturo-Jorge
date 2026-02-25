@@ -221,22 +221,12 @@ public class BagUI : MonoBehaviour
         if (weaponsSelected)
         {
             ItemSO weapon = Bag.Instance.GetItems().Find(i => i.itemName == itemUI.text.text);
-
-            if(CharacterEquipment.Instance.equippedWeapon == weapon)
+            if (weapon != null)
             {
-                CharacterEquipment.Instance.equippedWeapon = null;
-                PlayerParty.Instance.UnequipWeapon(weapon.weapon);
-                equipText.text = "• Equipar";
+                EquipmentManager.Instance.EquipWeapon(weapon);
+                PlayerParty.Instance.EquipWeapon(weapon.weapon);
             }
-            else
-            {
-                if (weapon != null)
-                {
-                    EquipmentManager.Instance.EquipWeapon(weapon);
-                    PlayerParty.Instance.EquipWeapon(weapon.weapon);
-                }
-                equipText.text = "• Desequipar";
-            }
+            
         }
         else
         {

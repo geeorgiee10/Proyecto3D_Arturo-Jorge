@@ -15464,7 +15464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7faca32955c719429c14d3f70b94b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterEquipment
-  element: 1
+  element: 2
   equippedWeapon: {fileID: 0}
   equippedAbilities:
   - {fileID: 0}

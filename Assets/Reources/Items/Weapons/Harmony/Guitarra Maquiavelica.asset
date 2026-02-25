@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75577ab19b2455f4696ed4ff58f61d12, type: 3}
-  m_Name: Guitarra Guitarra Maquiavelica
+  m_Name: Guitarra Maquiavelica
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: Guitarra Maquiavelica
   ability: {fileID: 0}
