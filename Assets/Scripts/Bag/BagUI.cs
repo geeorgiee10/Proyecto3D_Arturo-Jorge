@@ -67,7 +67,7 @@ public class BagUI : MonoBehaviour
 
         equipText.text = "• Equipar";
 
-        SpawnItems(Bag.Instance.GetItems(), itemsContainer, weaponItems);
+        SpawnItems(Bag.Instance.GetWeapons(), itemsContainer, weaponItems);
         SpawnItems(Bag.Instance.GetAbilities(), abilitiesContainer, abilityItems);
 
         selectedIndex = 0;
@@ -234,7 +234,7 @@ public class BagUI : MonoBehaviour
     {
         if (weaponsSelected)
         {
-            ItemSO weapon = Bag.Instance.GetItems().Find(i => i.itemName == itemUI.text.text);
+            ItemSO weapon = Bag.Instance.GetWeapons().Find(i => i.itemName == itemUI.text.text);
             if (weapon != null)
             {
                 EquipmentManager.Instance.EquipWeapon(weapon);
@@ -249,9 +249,12 @@ public class BagUI : MonoBehaviour
             if (ability == null)
                 return;
 
-            CharacterEquipment.Instance.ToggleAbility(ability);
+            bool changed = PlayerParty.Instance.ToggleAbility(ability.ability);
 
-            bool nowEquipped = CharacterEquipment.Instance.IsAbilityEquipped(ability);
+            bool nowEquipped = PlayerParty.Instance
+                .GetCombatantData()
+                .Find(c => c.element == ability.ability.element)
+                .abilities.Contains(ability.ability);
 
             equipText.text = nowEquipped ? "• Desequipar" : "• Equipar";
         }

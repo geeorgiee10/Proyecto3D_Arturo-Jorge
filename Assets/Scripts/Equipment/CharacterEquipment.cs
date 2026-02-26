@@ -32,25 +32,23 @@ public class CharacterEquipment : MonoBehaviour
         {
             return false;
         }
-        
-        CombatantData cd = PlayerParty.Instance.partyMembers[combatantIndex];
 
         // Buscar si ya está equipada
-        for (int i = 0; i < cd.abilities.Length; i++)
+        for (int i = 0; i < PlayerParty.Instance.partyMembers[combatantIndex].abilities.Length; i++)
         {
-            if (cd.abilities[i] == ability.ability)
+            if (PlayerParty.Instance.partyMembers[combatantIndex].abilities[i] == ability.ability)
             {
-                cd.abilities[i] = null;
+                PlayerParty.Instance.partyMembers[combatantIndex].abilities[i] = null;
                 return false;
             }
         }
 
         // Buscar slot vacío
-        for (int i = 0; i < cd.abilities.Length; i++)
+        for (int i = 0; i < PlayerParty.Instance.partyMembers[combatantIndex].abilities.Length; i++)
         {
-            if (cd.abilities[i] == null)
+            if (PlayerParty.Instance.partyMembers[combatantIndex].abilities[i] == null)
             {
-                cd.abilities[i] = ability.ability;
+                PlayerParty.Instance.partyMembers[combatantIndex].abilities[i] = ability.ability;
                 return true;
             }
         }

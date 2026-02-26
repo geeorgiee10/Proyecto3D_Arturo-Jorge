@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: "Micr\xF3fono Oriental"
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   name: "Micr\xF3fono Oriental"
-  damage: 8
+  damage: 13
   element: 1

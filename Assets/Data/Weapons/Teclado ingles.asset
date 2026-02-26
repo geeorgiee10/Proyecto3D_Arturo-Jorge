@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Teclado ingles
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   name: Teclado Ingles
-  damage: 9
+  damage: 14
   element: 3

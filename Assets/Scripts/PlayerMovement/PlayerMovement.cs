@@ -45,6 +45,14 @@ public class PlayerMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (WorldData.Instance.hasCheckpoint)
+            if (WorldData.Instance.win)
+                transform.position = WorldData.Instance.playerPosition;
+            else
+                transform.position = WorldData.Instance.currentCheckpoint;
+        else
+            WorldData.Instance.SaveCheckpoint(transform.position);
+
         Instance = this;
 
         characterController = GetComponent<CharacterController>();
