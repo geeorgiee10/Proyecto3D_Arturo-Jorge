@@ -44,18 +44,19 @@ public class BattleStarter : MonoBehaviour
 
 /*
 
-AUSTIN      1
-PÁRSIFAL    2
-LULU        4
-SERGEY      8
+AUSTIN      1       G
+PÁRSIFAL    2       M
+LULU        4       P
+SERGEY      8       B
 
-ANTONIO     1
-FARI        2
-PAQUIRRÍN   4
-CIGALA      8
-gMINION     16
-mMINION     32
-pMINION     64
-bMINION     128
+ANTONIO     1       G
+FARI        2       M
+PAQUIRRÍN   4       P
+CIGALA      8       B
+
+gMINION     16      G
+mMINION     32      M
+pMINION     64      P
+bMINION     128     G
 
 */
