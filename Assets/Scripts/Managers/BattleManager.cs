@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
+    public string enemyId;
+
     public Transform HeroTeam;
     public Transform EnemyTeam;
     public TurnManager turnManager;
@@ -24,6 +27,8 @@ public class BattleManager : MonoBehaviour
         
         ApplyMask(BattleData.Instance.alliedMask, heroTeam, true);
         ApplyMask(BattleData.Instance.enemyMask, enemyTeam, false);
+
+        enemyId = BattleData.Instance.enemyId;
 
         FilterActiveCombatants();
     }
@@ -94,7 +99,6 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             bool active = (mask & (1 << i)) != 0;
-            Debug.Log(slots[i].gameObject);
             slots[i].gameObject.SetActive(active);
 
             if (active)
@@ -160,5 +164,18 @@ public class BattleManager : MonoBehaviour
             t.localPosition = localPos;
             t.forward = isHero ? Vector3.forward : Vector3.back;
         }
+    }
+
+    public void EndBattle(bool victory)
+    {
+        if (victory)
+        {
+            WorldData.Instance.RegisterEnemyDefeated(enemyId);
+            WorldData.Instance.win = true;
+        }
+        else
+            WorldData.Instance.win = false;
+
+        SceneManager.LoadScene("GameScene");
     }
 }

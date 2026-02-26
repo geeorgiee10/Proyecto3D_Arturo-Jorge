@@ -7,6 +7,7 @@ public class BattleData : MonoBehaviour
 
     public int alliedMask;
     public int enemyMask;
+    public string enemyId;
 
     public List<CombatantData> alliedData;
     public List<CombatantData> enemyData;

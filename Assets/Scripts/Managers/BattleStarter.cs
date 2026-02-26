@@ -6,6 +6,7 @@ public class BattleStarter : MonoBehaviour
 {
     [Header("Enemy Setup")]
     [SerializeField] private int enemyMask;
+    [SerializeField] private string enemyId;
 
     [SerializeField] private List<CombatantData> enemyCombatants;
 
@@ -14,6 +15,10 @@ public class BattleStarter : MonoBehaviour
         PreparePlayerData();
         PrepareEnemyData();
 
+        BattleData.Instance.enemyId = enemyId;
+
+        WorldData.Instance.playerPosition = PlayerMovement.Instance.transform.position;
+        WorldData.Instance.hasSavedPosition = true;
         SceneManager.LoadScene("CombatScene");
     }
 
@@ -21,13 +26,17 @@ public class BattleStarter : MonoBehaviour
     {
         BattleData.Instance.alliedMask = PlayerParty.Instance.partyMask;
 
-        BattleData.Instance.alliedData = 
-            PlayerParty.Instance.GetCombatantData();
+        BattleData.Instance.alliedData = PlayerParty.Instance.GetCombatantData();
     }
 
     void PrepareEnemyData()
     {
         BattleData.Instance.enemyMask = enemyMask;
         BattleData.Instance.enemyData = enemyCombatants;
+    }
+
+    void Update()
+    {
+        gameObject.SetActive(!WorldData.Instance.IsEnemyDefeated(enemyId));
     }
 }

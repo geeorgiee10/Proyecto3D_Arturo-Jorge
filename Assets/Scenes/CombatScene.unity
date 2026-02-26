@@ -2061,6 +2061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f93aba5f640568047af329ddcce37fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnManager
+  battleManager: {fileID: 1250370309}
   qteManager: {fileID: 1742471965}
   selectActionPanel: {fileID: 1350421305}
   txtTurnTitle: {fileID: 1372617494}
@@ -5555,6 +5556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb133596e38b07141a34a131f4b127ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
+  enemyId: 
   HeroTeam: {fileID: 217766430}
   EnemyTeam: {fileID: 1145720116}
   turnManager: {fileID: 413756113}

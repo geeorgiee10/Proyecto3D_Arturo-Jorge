@@ -6,6 +6,7 @@ using System.Collections;
 
 public class TurnManager : MonoBehaviour
 {
+    [SerializeField]private BattleManager battleManager;
     private List<Combatant> combatants;
     private int currentIndex;
 
@@ -531,35 +532,19 @@ public class TurnManager : MonoBehaviour
     {
         bool allEnemiesDead = true;
         foreach (Combatant c in combatants)
-        {
             if (c.team == Team.Enemy && !c.dead)
-            {
                 allEnemiesDead = false;
-                return false;
-            }
-        }
 
         if (allEnemiesDead)
-        {
-            txtTurnTitle.text = "Ganan los héroes";
-            return true;
-        }
+            battleManager.EndBattle(true);
 
         bool allHeroesDead = true;
         foreach (Combatant c in combatants)
-        {
             if (c.team == Team.Hero && !c.dead)
-            {
                 allHeroesDead = false;
-                return false;
-            }
-        }
 
         if (allHeroesDead)
-        {
-            txtTurnTitle.text = "Ganan los malos";
-            return true;
-        }
+            battleManager.EndBattle(false);
 
         return false;
     }
