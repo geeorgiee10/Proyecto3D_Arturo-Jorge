@@ -10,7 +10,6 @@ public class CharacterEquipment : MonoBehaviour
 
     public int combatantIndex;
 
-    public Combatant combatant;
 
     void Awake()
     {
@@ -62,16 +61,16 @@ public class CharacterEquipment : MonoBehaviour
     public bool IsAbilityEquipped(ItemSO ability)
     {
         if (ability == null || PlayerParty.Instance == null)
-        return false;
-
-        // Buscar el miembro de la party con este elemento
-        CombatantData cd = PlayerParty.Instance.partyMembers
-            .Find(c => c.element == element);
-
-        if (cd == null || cd.abilities == null)
             return false;
 
-        // Buscar la habilidad en sus slots
+        if (combatantIndex < 0 || combatantIndex >= PlayerParty.Instance.partyMembers.Count)
+            return false;
+
+        CombatantData cd = PlayerParty.Instance.partyMembers[combatantIndex];
+
+        if (cd.abilities == null)
+            return false;
+
         foreach (var a in cd.abilities)
         {
             if (a == ability.ability)

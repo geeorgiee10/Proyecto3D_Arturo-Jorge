@@ -136,8 +136,10 @@ public class BagUI : MonoBehaviour
             if(audioConfirm != null)
                 audioConfirm.Play();
             if(currentList.Count > 0)
+            {
                 MenuManager.Instance.SubMenuUsing = true;
                 OpenSubmenu(currentList[selectedIndex]);
+            }
         }
 
         if(submenuOpen)
@@ -175,6 +177,18 @@ public class BagUI : MonoBehaviour
     {
         UpdateList(weaponItems, weaponsSelected);
         UpdateList(abilityItems, !weaponsSelected);
+
+        if (!weaponsSelected && abilityItems.Count > 0)
+        {
+            ItemSO ability = Bag.Instance.GetAbilities()[selectedIndex];
+
+            bool equipped = CharacterEquipment.Instance.IsAbilityEquipped(ability);
+            equipText.text = equipped ? "• Desequipar" : "• Equipar";
+        }
+        else
+        {
+            equipText.text = "• Equipar";
+        }
     }
 
     void UpdateList(List<BagItemUI> list, bool active)

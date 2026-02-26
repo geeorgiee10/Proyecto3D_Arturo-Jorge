@@ -230,19 +230,35 @@ public class TurnManager : MonoBehaviour
             qtePanel.SetActive(false);
             
             txtTurnTitle.text = "Turno de "+combatant.name;
-            ability1.canUse = combatant.abilityPoints >= combatant.abilities[0].cost && !combatant.HasEffect(Effect.Silence);
-            ability2.canUse = combatant.abilityPoints >= combatant.abilities[1].cost && !combatant.HasEffect(Effect.Silence);
+            ability1.canUse = combatant.abilities[0] != null && combatant.abilityPoints >= combatant.abilities[0].cost && !combatant.HasEffect(Effect.Silence);
+            ability2.canUse = combatant.abilities[1] != null && combatant.abilityPoints >= combatant.abilities[1].cost && !combatant.HasEffect(Effect.Silence);
 
-
-            ability1.txtTitle.text = combatant.abilities[0].name;
-            ability1.txtDescription.text = combatant.abilities[0].GetFormattedDescription();
-            ability1.txtKey.text = "W";
-            ability1.txtCost.text = ""+combatant.abilities[0].cost;
-
-            ability2.txtTitle.text = combatant.abilities[1].name;
-            ability2.txtDescription.text = combatant.abilities[1].GetFormattedDescription();
-            ability2.txtKey.text = "E";
-            ability2.txtCost.text = ""+combatant.abilities[1].cost;
+            if(combatant.abilities[0] == null)
+            {
+                ability1.gameObject.SetActive(false);
+            }
+            else
+            {
+                ability1.gameObject.SetActive(true);
+                
+                ability1.txtTitle.text = combatant.abilities[0].name;
+                ability1.txtDescription.text = combatant.abilities[0].GetFormattedDescription();
+                ability1.txtKey.text = "W";
+                ability1.txtCost.text = ""+combatant.abilities[0].cost;
+            }
+            if(combatant.abilities[1] == null)
+            {
+                ability2.gameObject.SetActive(false);
+            }
+            else
+            {
+                ability2.gameObject.SetActive(true);
+                
+                ability2.txtTitle.text = combatant.abilities[1].name;
+                ability2.txtDescription.text = combatant.abilities[1].GetFormattedDescription();
+                ability2.txtKey.text = "E";
+                ability2.txtCost.text = ""+combatant.abilities[1].cost;
+            }
         }
         else
         {
