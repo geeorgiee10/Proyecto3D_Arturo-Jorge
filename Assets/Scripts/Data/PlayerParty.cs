@@ -59,24 +59,25 @@ public class PlayerParty : MonoBehaviour
 
     void Start()
     {
+        partyMask = 1;
         foreach(string completedEvent in WorldData.Instance.completedEvents)
         {            
             if(completedEvent == "paquirrín")
             {
                 AddCharacter(resCharData.rescuableCombatants[2]);
-                partyMask += 2;
+                partyMask += 8;
             }
 
             if(completedEvent == "cigala")
             {
                 AddCharacter(resCharData.rescuableCombatants[1]);
-                partyMask += 1;
+                partyMask += 4;
             }
 
             if(completedEvent == "fariV1")
             {
                 AddCharacter(resCharData.rescuableCombatants[0]);
-                partyMask += 0;
+                partyMask += 2;
             }
         }
 
