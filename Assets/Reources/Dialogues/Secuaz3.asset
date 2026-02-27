@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 341af71cfd3f95343a3d7cd62fe055eb, type: 3}
   m_Name: Secuaz3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
-  npcName: El Jairo
+  npcName: El Nano
   lines:
   - "\xA1Eh, pisha!  "
   - "Aqu\xED se baila o se jode el rock.  "
