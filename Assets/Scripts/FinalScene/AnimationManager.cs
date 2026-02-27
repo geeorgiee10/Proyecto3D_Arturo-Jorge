@@ -37,13 +37,13 @@ public class AnimationManager : MonoBehaviour
 
     void Update()
     {
-        //PlayWinAnimation();
+        PlayWinAnimation();
         transform.position = pos;
     }
 
     public void PlayWinAnimation()
     {
-        int numRandom = Random.Range(1, 5);
+        int numRandom = Random.Range(1, 4);
         animator.SetInteger("Random", numRandom);
     }
 }
