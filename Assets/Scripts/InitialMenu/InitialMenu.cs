@@ -22,7 +22,6 @@ public class InitialMenu : MonoBehaviour
 
     public void Play()
     {
-        Debug.Log("Iniciar Juego");
         if (audioSelectMenu != null)
             audioSelectMenu.Play();
         TransitionManager.Instance.LoadSceneWithFade("GameScene");
@@ -30,7 +29,6 @@ public class InitialMenu : MonoBehaviour
 
     public void Quit()
     {
-        Debug.Log("Salir Juego");
         if (audioSelectMenu != null)
             audioSelectMenu.Play();
         Application.Quit();

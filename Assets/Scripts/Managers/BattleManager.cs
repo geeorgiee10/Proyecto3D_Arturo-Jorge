@@ -176,6 +176,9 @@ public class BattleManager : MonoBehaviour
         else
             WorldData.Instance.win = false;
 
-        SceneManager.LoadScene("GameScene");
+        if(enemyId == "fariV2")
+            SceneManager.LoadScene("FinalScene");
+        else
+            SceneManager.LoadScene("GameScene");
     }
 }

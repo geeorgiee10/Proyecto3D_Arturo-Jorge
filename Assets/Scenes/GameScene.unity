@@ -3172,7 +3172,7 @@ MonoBehaviour:
     name: Austin
     maxHealth: 200
     health: 200
-    strength: 1000
+    strength: 8
     speed: 6
     initiative: 0
     abilityPoints: 3
@@ -3219,7 +3219,7 @@ MonoBehaviour:
     name: "P\xE1rsifal"
     maxHealth: 200
     health: 200
-    strength: 1000
+    strength: 5
     speed: 7
     initiative: 0
     abilityPoints: 3
@@ -3233,7 +3233,7 @@ MonoBehaviour:
     name: Lulu
     maxHealth: 200
     health: 200
-    strength: 1000
+    strength: 7
     speed: 7
     initiative: 0
     abilityPoints: 3
@@ -3247,7 +3247,7 @@ MonoBehaviour:
     name: Sergey
     maxHealth: 200
     health: 200
-    strength: 1000
+    strength: 12
     speed: 4
     initiative: 0
     abilityPoints: 3
