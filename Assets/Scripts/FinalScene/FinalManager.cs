@@ -17,13 +17,11 @@ public class FinalManager : MonoBehaviour
     {
 
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
-        {
             Destroy(gameObject);
-        }
+
+        gameWin = WorldData.Instance.completedEvents.Contains("fariV2");
     }
 
 

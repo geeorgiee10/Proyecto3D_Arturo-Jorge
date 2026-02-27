@@ -87,6 +87,8 @@ public class PlayerParty : MonoBehaviour
             Bag.Instance.AddItem(new ItemSO(cd.abilities[1].name, cd.abilities[1]));
             Bag.Instance.AddItem(new ItemSO(cd.weapon.name, cd.weapon));
         }
+        
+        TalkIndicator.Instance.Hide();
     }
 
     public bool ToggleAbility(Ability ability)

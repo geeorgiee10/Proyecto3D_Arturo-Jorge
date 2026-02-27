@@ -52,4 +52,14 @@ public class NPCDialogue : MonoBehaviour
             TalkIndicator.Instance.Hide();
         }
     }
+
+    void OnDisable()
+    {
+        if (playerInRange)
+        {
+            TalkIndicator.Instance.Hide();
+            playerInRange = false;
+            dialogueStarted = false;
+        }
+    }
 }

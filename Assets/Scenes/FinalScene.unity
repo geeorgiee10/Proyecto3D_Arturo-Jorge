@@ -2070,7 +2070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0a1aa90d8464548b6d20490c43e108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalManager
-  gameWin: 1
+  gameWin: 0
   loserMusic: {fileID: 1200996561}
   winnerMusic: {fileID: 967602166}
   textResult: {fileID: 62797385}

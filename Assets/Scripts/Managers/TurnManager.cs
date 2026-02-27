@@ -6,6 +6,8 @@ using System.Collections;
 
 public class TurnManager : MonoBehaviour
 {
+    private bool inputLocked = false;
+
     [SerializeField]private BattleManager battleManager;
     private List<Combatant> combatants;
     private int currentIndex;
@@ -75,6 +77,17 @@ public class TurnManager : MonoBehaviour
         KeyCode[] keysToCheck = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.Escape };
         foreach (var key in keysToCheck)
             keyPressed[key] = false;
+
+        StartCoroutine(EnableInputWithDelay(0.5f));
+    }
+
+    IEnumerator EnableInputWithDelay(float delay)
+    {
+        inputLocked = true;
+
+        yield return new WaitForSeconds(delay);
+
+        inputLocked = false;
     }
 
     private bool GetKeyPressedOnce(KeyCode key)
@@ -104,6 +117,7 @@ public class TurnManager : MonoBehaviour
                 : (combatants[i].team == Team.Enemy ? "<color=#E68983>"+combatants[i].name+"</color>" : "<color=#83E6DD>"+combatants[i].name+"</color>") + "\n";
         }
 
+        if (inputLocked) return;
 
         if(currentAction == Action.SelectingAbility)
             HandleSelectAbility();
@@ -606,7 +620,6 @@ public class TurnManager : MonoBehaviour
 
     private bool ShouldUseBasicAttack(Combatant enemy)
     {
-        // Si no puede pagar ninguna habilidad → básico obligatorio
         Ability[] abilities = enemy.GetAbilities();
         bool canUseAny = false;
 
@@ -622,15 +635,14 @@ public class TurnManager : MonoBehaviour
         if (!canUseAny)
             return true;
 
-        // Cuantos menos puntos tenga, más probable es que ataque básico
         float basicChance;
 
         if (enemy.abilityPoints <= 2)
-            basicChance = 0.6f;   // 60% básico
+            basicChance = 0.6f;
         else if (enemy.abilityPoints <= 4)
-            basicChance = 0.35f;  // 35% básico
+            basicChance = 0.35f;
         else
-            basicChance = 0.15f;  // 15% básico
+            basicChance = 0.15f;
 
         return Random.value < basicChance;
     }
