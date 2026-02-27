@@ -73,3 +73,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# Folder with .exe
+/[Cc]ompas 4x4/*
+/[Cc]ompas 4x4.zip
+
+# Folder with html game
+/[Cc]ompas 4x4Web/*
+/[Cc]ompas 4x4Web.zip
