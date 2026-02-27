@@ -1,20 +1,60 @@
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
-    public Transform HeroTeam;   // referencia solo para los combatants
-    public Transform EnemyTeam;  // referencia solo para los combatants
-    public TurnManager turnManager;
-    public GameObject battleCardPrefab; // prefab de la card
-    public RectTransform canvas;        // canvas de la batalla
+    public string enemyId;
 
-    float spacing = 150f; // separación entre cards
+    public Transform HeroTeam;
+    public Transform EnemyTeam;
+    public TurnManager turnManager;
+    public GameObject battleCardPrefab;
+    public RectTransform canvas;
+
+    private Combatant[] heroTeam;
+    private Combatant[] enemyTeam;
+
+    private List<Combatant> activeHeroes = new List<Combatant>();
+    private List<Combatant> activeEnemies = new List<Combatant>();
+
+    float spacing = 150f;
+
+    void Awake()
+    {
+        heroTeam = HeroTeam.GetComponentsInChildren<Combatant>(true);
+        enemyTeam = EnemyTeam.GetComponentsInChildren<Combatant>(true);
+        
+        ApplyMask(BattleData.Instance.alliedMask, heroTeam, true);
+        ApplyMask(BattleData.Instance.enemyMask, enemyTeam, false);
+
+        enemyId = BattleData.Instance.enemyId;
+
+        FilterActiveCombatants();
+    }
+
+    void FilterActiveCombatants()
+    {
+        activeHeroes.Clear();
+        activeEnemies.Clear();
+
+        foreach (Combatant c in heroTeam)
+        {
+            if (c.gameObject.activeSelf)
+                activeHeroes.Add(c);
+        }
+
+        foreach (Combatant c in enemyTeam)
+        {
+            if (c.gameObject.activeSelf)
+                activeEnemies.Add(c);
+        }
+    }
 
     void Start()
     {
-        // Héroes: esquina inferior derecha -> izquierda
         int heroIndex = 0;
-        foreach (Combatant c in HeroTeam.GetComponentsInChildren<Combatant>())
+        foreach (Combatant c in activeHeroes)
         {
             turnManager.AddCombatant(c);
 
@@ -22,36 +62,123 @@ public class BattleManager : MonoBehaviour
             card.GetComponent<BattleCardUi>().combatant = c;
             RectTransform rt = card.GetComponent<RectTransform>();
 
-            // Anchors en esquina inferior derecha
             rt.anchorMin = new Vector2(1, 0);
             rt.anchorMax = new Vector2(1, 0);
             rt.pivot = new Vector2(1, 0);
 
-            // Posición relativa desde la esquina inferior derecha
-            rt.anchoredPosition = new Vector2(-heroIndex * spacing, 0); // 10 píxeles del borde inferior
+            rt.anchoredPosition = new Vector2(-heroIndex * spacing, 0);
             heroIndex++;
         }
 
-        // Enemigos: esquina superior izquierda -> derecha
         int enemyIndex = 0;
-        foreach (Combatant c in EnemyTeam.GetComponentsInChildren<Combatant>())
+        foreach (Combatant c in activeEnemies)
         {
             turnManager.AddCombatant(c);
 
             GameObject card = Instantiate(battleCardPrefab, canvas);
-            card.GetComponent<BattleCardUi>().combatant = c;
-            RectTransform rt = card.GetComponent<RectTransform>();
+            BattleCardUi ui = card.GetComponent<BattleCardUi>();
+            ui.combatant = c;
 
-            // Anchors en esquina superior izquierda
-            rt.anchorMin = new Vector2(0, 1);
-            rt.anchorMax = new Vector2(0, 1);
-            rt.pivot = new Vector2(0, 1);
+            ui.followWorldPosition = true;
 
-            // Posición relativa desde la esquina superior izquierda
-            rt.anchoredPosition = new Vector2(enemyIndex * spacing, 0); // 10 píxeles del borde superior
+            ui.worldOffset = new Vector3(0, 3.5f, 0);
+            card.GetComponent<RectTransform>().localScale = Vector3.one * 0.5f;
+
             enemyIndex++;
         }
 
+        SetupTeamPositions(activeHeroes, true);
+        SetupTeamPositions(activeEnemies, false);
+
         turnManager.StartBattle();
+    }
+
+    void ApplyMask(int mask, Combatant[] slots, bool isHero)
+    {
+        int k = 0;
+        for (int i = 0; i < slots.Length; i++)
+        {
+            bool active = (mask & (1 << i)) != 0;
+            slots[i].gameObject.SetActive(active);
+
+            if (active)
+            {
+                slots[i].name = isHero ?
+                    BattleData.Instance.alliedData[k].name : 
+                    BattleData.Instance.enemyData[k].name;
+                slots[i].maxHealth = isHero ? 
+                    BattleData.Instance.alliedData[k].maxHealth : 
+                    BattleData.Instance.enemyData[k].maxHealth;
+                slots[i].health = isHero ?
+                    BattleData.Instance.alliedData[k].health :
+                    BattleData.Instance.enemyData[k].health;
+                slots[i].strength = isHero ?
+                    BattleData.Instance.alliedData[k].strength :
+                    BattleData.Instance.enemyData[k].strength;
+                slots[i].speed = isHero ?
+                    BattleData.Instance.alliedData[k].speed :
+                    BattleData.Instance.enemyData[k].speed;
+                slots[i].initiative = isHero ?
+                    BattleData.Instance.alliedData[k].initiative :
+                    BattleData.Instance.enemyData[k].initiative;
+                slots[i].abilityPoints = isHero ?
+                    BattleData.Instance.alliedData[k].abilityPoints :
+                    BattleData.Instance.enemyData[k].abilityPoints;
+                slots[i].weapon = isHero ?
+                    BattleData.Instance.alliedData[k].weapon :
+                    BattleData.Instance.enemyData[k].weapon;
+                slots[i].abilities[0] = isHero ?
+                    BattleData.Instance.alliedData[k].abilities[0] :
+                    BattleData.Instance.enemyData[k].abilities[0];
+                slots[i].abilities[1] = isHero ?
+                    BattleData.Instance.alliedData[k].abilities[1] :
+                    BattleData.Instance.enemyData[k].abilities[1];
+                slots[i].element = isHero ?
+                    BattleData.Instance.alliedData[k].element :
+                    BattleData.Instance.enemyData[k].element;
+
+                k++;
+            }
+        }
+    }
+
+    void SetupTeamPositions(List<Combatant> members, bool isHero)
+    {
+        int count = members.Count;
+
+        if (count == 0)
+            return;
+
+        float planeWidth = -15f;
+        float spacing = planeWidth / Mathf.Max(count, 1);
+        float startOffset = -((count - 1) * spacing) / 2f;
+
+        for (int i = 0; i < count; i++)
+        {
+            Transform t = members[i].transform;
+
+            Vector3 localPos = t.localPosition;
+            localPos.x = startOffset + i * spacing;
+            localPos.z = isHero ? -6f : 6f;
+
+            t.localPosition = localPos;
+            t.forward = isHero ? Vector3.forward : Vector3.back;
+        }
+    }
+
+    public void EndBattle(bool victory)
+    {
+        if (victory)
+        {
+            WorldData.Instance.RegisterEnemyDefeated(enemyId);
+            WorldData.Instance.win = true;
+        }
+        else
+            WorldData.Instance.win = false;
+
+        if(enemyId == "fariV2")
+            SceneManager.LoadScene("FinalScene");
+        else
+            SceneManager.LoadScene("GameScene");
     }
 }

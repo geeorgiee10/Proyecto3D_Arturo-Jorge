@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class BeatUI : MonoBehaviour
 {
     public Image background;
+    public Image grooveLogo;
     public TMP_Text label;
 
     public QTEKey ExpectedKey { get; private set; }
@@ -17,7 +18,7 @@ public class BeatUI : MonoBehaviour
         SetResult(result);
     }
 
-    public void Setup(QTEInput input, float spacing, float lastPosition)
+    public void Setup(QTEInput input, float spacing, float lastPosition, bool groove)
     {
         ExpectedKey = input.key;
         resolved = false;
@@ -29,6 +30,18 @@ public class BeatUI : MonoBehaviour
             case QTEKey.D: label.text = "D"; break;
             case QTEKey.F: label.text = "F"; break;
         }
+        
+        if (groove)
+        {
+            grooveLogo.color = new Color(0, 0, 0, 1); 
+            label.color = new Color(0, 0, 0, 0); 
+        }
+        else
+        {
+            grooveLogo.color = new Color(0, 0, 0, 0); 
+            label.color = new Color(0, 0, 0, 1); 
+        }
+
 
         switch (input.type)
         {
@@ -42,7 +55,7 @@ public class BeatUI : MonoBehaviour
     {
         background.color = result switch
         {
-            QTEResult.Perfect => Color.green,
+            QTEResult.Perfect => new Color(0f, 1f, 1f),
             QTEResult.Good => Color.yellow,
             QTEResult.Miss => Color.red,
             _ => Color.white

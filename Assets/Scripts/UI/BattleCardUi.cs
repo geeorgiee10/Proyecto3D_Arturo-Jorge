@@ -14,12 +14,18 @@ public class BattleCardUi : MonoBehaviour
     [SerializeField] Image[] imgAP;
     [SerializeField] TextMeshProUGUI txtAP;
 
+    public bool followWorldPosition = false;
+    public Vector3 worldOffset = new Vector3(0, 1f, 0);
+
+    private Camera mainCamera;
+    private RectTransform rectTransform;
+
     private Dictionary<Effect, string> colors = new Dictionary<Effect, string>()
     {
         { Effect.OutOfTempo, "#dfa945" },
         { Effect.OutOfTune, "#9b569b" },
         { Effect.Microtone, "#470070" },
-        { Effect.Silence, "#808080" },
+        { Effect.Silence, "#222" },
         { Effect.PerfectTempo, "#2056ba" },
         { Effect.Tuned, "#64a964" },
         { Effect.Extasis, "#cc2d6f" },
@@ -29,10 +35,15 @@ public class BattleCardUi : MonoBehaviour
     private float currentFill = 1f;
     public float lerpSpeed = 3f;
 
+    void Start()
+    {
+        mainCamera = Camera.main;
+        rectTransform = GetComponent<RectTransform>();
+    }
 
     void Update()
     {
-        txtName.text = combatant.name;
+        txtName.text = combatant.hasTurn ? "<size=140%><color=#FFD700>" + combatant.name + "</color></size>\n" : combatant.name;
         txtHealth.text = combatant.health + "/" + combatant.maxHealth;
         txtAP.text = ""+combatant.abilityPoints;
 
@@ -83,12 +94,23 @@ public class BattleCardUi : MonoBehaviour
             if(i+1 <= combatant.abilityPoints)
                 imgAP[i].color = new Color(0, 1, 1, 1);
         }
+    }
 
-        if(combatant.team == Team.Enemy)
+    void LateUpdate()
+    {
+        if (!followWorldPosition || combatant == null)
+            return;
+
+        Vector3 worldPos = combatant.transform.position + worldOffset;
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPos);
+
+        if (screenPos.z < 0)
         {
-            foreach(Image i in imgAP)
-                i.color = new Color(1, 1, 1, 0);
-            txtAP.text = "";
+            gameObject.SetActive(false);
+            return;
         }
+
+        gameObject.SetActive(true);
+        rectTransform.position = screenPos;
     }
 }

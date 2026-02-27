@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+    public static PlayerMovement Instance;
+
     [Header("Movimiento")]
         public float moveSpeed = 40f;
         public float sprintSpeed = 1.8f;
@@ -20,8 +23,11 @@ public class PlayerMovement : MonoBehaviour
         public float verticalVelocity;
         public bool jumpRequested = false;
 
+    [Header("Audio")]
         [SerializeField] private AudioSource audioSourceJump;
         [SerializeField] private AudioSource audioSourceSteps;
+        [SerializeField] private AudioSource audioPunch;
+        [SerializeField] private AudioSource audioPickUp;
         [SerializeField] private int minSpeedSound = 1;
 
         [SerializeField] private Animator animator;
@@ -31,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
         
         private bool runPress;
+        public bool canMove = true;
 
 
         
@@ -38,17 +45,34 @@ public class PlayerMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (WorldData.Instance.hasCheckpoint)
+            if (WorldData.Instance.win)
+                transform.position = WorldData.Instance.playerPosition;
+            else
+                transform.position = WorldData.Instance.currentCheckpoint;
+        else
+            WorldData.Instance.SaveCheckpoint(transform.position);
+
+        Instance = this;
+
         characterController = GetComponent<CharacterController>();
         currentSpeed = moveSpeed;
     }
 
     private void OnMove(InputValue value)
     {
+        if (!canMove) 
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
         moveInput = value.Get<Vector2>();
     }
 
     private void OnJump(InputValue value)
     {
+        if (!canMove) return;
+
         if(value.isPressed)
         {
             jumpRequested = true;
@@ -57,7 +81,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnPunch(InputValue value)
     {
-        
+        if (!canMove) return;
+        if(value.isPressed)
+        {
+            if(audioPunch != null)
+                audioPunch.Play();
+
+            animator.SetTrigger("Punch");
+        }
     }
 
     /*private void OnThrowStick(InputValue value)
@@ -73,6 +104,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!canMove)
+        {
+            animator.SetFloat("VerticalVelocity", 0);
+            return;
+        }
+
         if(characterController == null)
             return; 
 
@@ -86,12 +123,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void StepsSound()
     {
+        if (!canMove)
+        {
+            if (audioSourceSteps != null && audioSourceSteps.isPlaying)
+                audioSourceSteps.Stop();
+            return;
+        }
+
         if(audioSourceSteps == null)
             return;
         
         Vector3 v = characterController.velocity;
         v.y = 0;
-        bool andando = characterController.isGrounded && v.magnitude > minSpeedSound;
+        bool andando = characterController.isGrounded && v.magnitude > minSpeedSound && !runPress;;
         if(andando)
         {
             if(!audioSourceSteps.isPlaying)
@@ -100,6 +144,12 @@ public class PlayerMovement : MonoBehaviour
         else if(audioSourceSteps.isPlaying)
             audioSourceSteps.Stop();
         
+    }
+
+    public void PickUpAudio()
+    {
+        if(audioPickUp != null)
+            audioPickUp.Play();
     }
 
     private void MovementControl()
@@ -125,6 +175,7 @@ public class PlayerMovement : MonoBehaviour
         bool runPress = InputSystem.GetDevice<Keyboard>().leftShiftKey.isPressed;
         currentSpeed = runPress ? moveSpeed * sprintSpeed : moveSpeed;
         Vector3 horizontalVelocity = worldMove * currentSpeed;
+        audioSourceSteps.pitch = runPress ? 1.5f : 1f;
 
         // Salto
         if (isGrounded && jumpRequested)

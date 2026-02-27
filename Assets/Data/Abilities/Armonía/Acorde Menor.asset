@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Acorde Menor
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: Acorde Menor
+  description: "Da\xF1o medio de {ELEMENT} a un enemigo"
   damage: 15
   type: 0
   target: 0

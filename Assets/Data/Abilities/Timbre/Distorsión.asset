@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: "Distorsi\xF3n"
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: "Distorsi\xF3n"
+  description: "Aplica {EFFECT} a un enemigo, haci\xE9ndole da\xF1o de {ELEMENT}"
   damage: 10
   type: 1
   target: 0
   element: 3
   statusEffect: {fileID: 11400000, guid: e19184f99294ec64ab4d14e8e5038ff5, type: 2}
-  qtePattern: {fileID: 0}
+  qtePattern: {fileID: 11400000, guid: 184d9342241504d48a098a9b51653ae7, type: 2}
   cost: 4

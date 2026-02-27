@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b86569866511846ac4f80514430507, type: 3}
   m_Name: "Bater\xEDa Ominosa"
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  name: 
-  damage: 0
+  name: "Bater\xEDa Ominosa"
+  damage: 10
   element: 0

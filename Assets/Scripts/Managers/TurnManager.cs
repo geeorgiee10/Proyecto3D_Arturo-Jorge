@@ -6,6 +6,9 @@ using System.Collections;
 
 public class TurnManager : MonoBehaviour
 {
+    private bool inputLocked = false;
+
+    [SerializeField]private BattleManager battleManager;
     private List<Combatant> combatants;
     private int currentIndex;
 
@@ -15,18 +18,14 @@ public class TurnManager : MonoBehaviour
     [Header("Start Turn Panel")]
     [SerializeField] private GameObject selectActionPanel;
     [SerializeField] private TextMeshProUGUI txtTurnTitle;
-    [SerializeField] private Button btnBasicAttack;
-    [SerializeField] private Button btnAbility1;
-    [SerializeField] private TextMeshProUGUI txtAbility1;
-    [SerializeField] private Button btnAbility2;
-    [SerializeField] private TextMeshProUGUI txtAbility2;
+    [SerializeField] private AbilityDisplay ability1;
+    [SerializeField] private AbilityDisplay ability2;
 
 
     [Header("Choose Target Panel")]
     [SerializeField] private GameObject chooseTargetPanel;
     [SerializeField] private Transform targetContainer;
     [SerializeField] private GameObject targetButtonPrefab;
-    [SerializeField] private Button btnCancelAbility;
 
 
     [Header("QTE Panel")]
@@ -37,6 +36,36 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private Ability selectedAbility;
     [SerializeField] private List<Combatant> selectedTargets;
 
+    [Header("Sound")]
+    [SerializeField] private AudioSource perfectComplete;
+
+    [Header("Camera Management")]
+    [SerializeField] private BattleCameraController cameraController;
+    [SerializeField] private Transform enemyAttackCameraPos;
+
+    public TextMeshProUGUI txtTurns;
+
+
+    private enum Action
+    {
+        SelectingAbility,
+        SelectingTarget,
+        SelectingEnemyTarget,
+        SelectingAllyTarget,
+        Confirming,
+        Attacking,
+    }
+    private Action currentAction = Action.SelectingAbility;
+
+    private string[] keys = {"Q","W","E","R"};
+    private KeyCode[] inputKeys = {
+        KeyCode.Q,
+        KeyCode.W,
+        KeyCode.E,
+        KeyCode.R
+    };
+    private Dictionary<KeyCode, bool> keyPressed = new Dictionary<KeyCode, bool>();
+
     void Awake()
     {
         chooseTargetPanel.SetActive(false);
@@ -44,6 +73,116 @@ public class TurnManager : MonoBehaviour
         combatants = new List<Combatant>();
         
         selectedTargets = new List<Combatant>();
+
+        KeyCode[] keysToCheck = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.Escape };
+        foreach (var key in keysToCheck)
+            keyPressed[key] = false;
+
+        StartCoroutine(EnableInputWithDelay(0.5f));
+    }
+
+    IEnumerator EnableInputWithDelay(float delay)
+    {
+        inputLocked = true;
+
+        yield return new WaitForSeconds(delay);
+
+        inputLocked = false;
+    }
+
+    private bool GetKeyPressedOnce(KeyCode key)
+    {
+        bool isDown = Input.GetKey(key);
+
+        if (isDown && !keyPressed[key])
+        {
+            keyPressed[key] = true;
+            return true;
+        }
+
+        if (!isDown)
+            keyPressed[key] = false;
+
+        return false;
+    }
+
+    void Update()
+    {
+        txtTurns.text = "";
+
+        for(int i = currentIndex; i < combatants.Count; i++)
+        {
+            txtTurns.text += i == currentIndex 
+                ? "<size=140%><color=#FFD700>" + combatants[i].name + "</color></size>\n"
+                : (combatants[i].team == Team.Enemy ? "<color=#E68983>"+combatants[i].name+"</color>" : "<color=#83E6DD>"+combatants[i].name+"</color>") + "\n";
+        }
+
+        if (inputLocked) return;
+
+        if(currentAction == Action.SelectingAbility)
+            HandleSelectAbility();
+        if(currentAction == Action.SelectingEnemyTarget)
+            HandleSelectEnemyTarget();
+        if(currentAction == Action.SelectingAllyTarget)
+            HandleSelectAllyTarget();
+        if(currentAction == Action.Confirming)
+            HandleConfirm();
+        
+        if(combatants[currentIndex].team == Team.Enemy)
+            qtePanel.SetActive(false);
+    }
+
+    void HandleSelectAbility()
+    {
+        Combatant combatant = combatants[currentIndex];
+
+        if (GetKeyPressedOnce(KeyCode.Q))
+            SelectAttack();
+
+        else if (GetKeyPressedOnce(KeyCode.W) && ability1.canUse)
+            SelectAbility(combatant.GetAbility1());
+
+        else if (GetKeyPressedOnce(KeyCode.E) && ability2.canUse)
+            SelectAbility(combatant.GetAbility2());
+    }
+
+    void HandleSelectEnemyTarget()
+    {
+        int i = 0;
+            foreach(Combatant c in GetEnemies())
+            {
+                if (GetKeyPressedOnce(inputKeys[i]))
+                    SelectTarget(c);
+
+                i++;
+            }
+
+        if (GetKeyPressedOnce(KeyCode.Escape))
+            CancelAbility();
+    }
+
+    void HandleSelectAllyTarget()
+    {
+        int i = 0;
+            foreach(Combatant c in GetHeroes())
+            {
+                if (GetKeyPressedOnce(inputKeys[i]))
+                    SelectTarget(c);
+
+                i++;
+            }
+
+        if (GetKeyPressedOnce(KeyCode.Escape))
+            CancelAbility();
+    }
+
+    void HandleConfirm()
+    {
+        if (GetKeyPressedOnce(KeyCode.Q))
+            SelectTarget(null);
+
+        if (GetKeyPressedOnce(KeyCode.Escape))
+            CancelAbility();
     }
 
     public void AddCombatant(Combatant pc)
@@ -77,7 +216,14 @@ public class TurnManager : MonoBehaviour
 
     public void StartTurn()
     {
+        foreach(Combatant c in combatants)
+            c.hasTurn = false;
+
         Combatant combatant = combatants[currentIndex];
+        combatant.hasTurn = true;
+        
+        selectedAbility = null;
+        selectedTargets = new List<Combatant>();
 
         if (combatant.dead)
         {
@@ -87,35 +233,99 @@ public class TurnManager : MonoBehaviour
 
         if (combatant.GetTeam() == Team.Hero)
         {
+            Vector3 enemyCenter = new Vector3(0f, 1.5f, 6f);
+            cameraController.MoveTo(
+                combatant.GetCameraAnchor(),
+                null,
+                enemyCenter
+            );
 
             selectActionPanel.SetActive(true);
             chooseTargetPanel.SetActive(false);
             qtePanel.SetActive(false);
             
             txtTurnTitle.text = "Turno de "+combatant.name;
-            txtAbility1.text = combatant.GetAbility1().name;
-            txtAbility2.text = combatant.GetAbility2().name;
+            ability1.canUse = combatant.abilities[0] != null && combatant.abilityPoints >= combatant.abilities[0].cost && !combatant.HasEffect(Effect.Silence);
+            ability2.canUse = combatant.abilities[1] != null && combatant.abilityPoints >= combatant.abilities[1].cost && !combatant.HasEffect(Effect.Silence);
 
-            btnBasicAttack.onClick.AddListener(() => SelectAttack());
-            btnAbility1.onClick.AddListener(() => SelectAbility(combatant.GetAbility1()));
-            btnAbility2.onClick.AddListener(() => SelectAbility(combatant.GetAbility2()));
+            if(combatant.abilities[0] == null)
+            {
+                ability1.gameObject.SetActive(false);
+            }
+            else
+            {
+                ability1.gameObject.SetActive(true);
+                
+                ability1.txtTitle.text = combatant.abilities[0].name;
+                ability1.txtDescription.text = combatant.abilities[0].GetFormattedDescription();
+                ability1.txtKey.text = "W";
+                ability1.txtCost.text = ""+combatant.abilities[0].cost;
+            }
+            if(combatant.abilities[1] == null)
+            {
+                ability2.gameObject.SetActive(false);
+            }
+            else
+            {
+                ability2.gameObject.SetActive(true);
+                
+                ability2.txtTitle.text = combatant.abilities[1].name;
+                ability2.txtDescription.text = combatant.abilities[1].GetFormattedDescription();
+                ability2.txtKey.text = "E";
+                ability2.txtCost.text = ""+combatant.abilities[1].cost;
+            }
         }
         else
         {
+            cameraController.MoveTo(
+                enemyAttackCameraPos,
+                combatant.transform
+            );
 
             selectActionPanel.SetActive(false);
             chooseTargetPanel.SetActive(false);
             qtePanel.SetActive(true);
 
+            if (combatant.HasEffect(Effect.Silence))
+            {
+                selectedAbility = null;
+                selectedTargets.Clear();
+                selectedTargets.Add(GetRandomHero());
+
+                StartCoroutine(ShowBasicAttack());
+                return;
+            }
+
             txtTurnTitle.text = "Turno de "+combatant.name;
+            
+            if (ShouldUseBasicAttack(combatant))
+            {
+                selectedAbility = null;
+                selectedTargets.Add(GetRandomHero());
+                StartCoroutine(ShowBasicAttack());
+                return;
+            }
+
             selectedAbility = ChooseRandomAbility(combatant);
+
+            if (selectedAbility == null)
+            {
+                selectedTargets.Add(GetRandomHero());
+                StartCoroutine(ShowBasicAttack());
+                return;
+            }
+            combatant.abilityPoints -= selectedAbility.cost;
+
             if(selectedAbility.target == AttackTarget.Ally)
                 selectedTargets.Add(GetRandomEnemy());
+
             else if(selectedAbility.target == AttackTarget.AllyTeam)
                 foreach(Combatant c in GetEnemies())
                     selectedTargets.Add(c);
+
             else if(selectedAbility.target == AttackTarget.Enemy)
                 selectedTargets.Add(GetRandomHero());
+
             else if(selectedAbility.target == AttackTarget.EnemyTeam)
                 foreach(Combatant c in GetHeroes())
                     selectedTargets.Add(c);
@@ -130,6 +340,8 @@ public class TurnManager : MonoBehaviour
         selectActionPanel.SetActive(true);
         chooseTargetPanel.SetActive(false);
         qtePanel.SetActive(false);
+
+        currentAction = Action.SelectingAbility;
     }
 
     public void ShowTargetSelection(List<Combatant> targets)
@@ -149,7 +361,7 @@ public class TurnManager : MonoBehaviour
 
             GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
             TargetButton btn = btnObj.GetComponent<TargetButton>();
-            btn.Init(target, this, target.name);
+            btn.Init(target, this, target.name, keys[i]);
             
             RectTransform rt = btnObj.GetComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(0, startY + i * spacing);
@@ -159,56 +371,72 @@ public class TurnManager : MonoBehaviour
 
     public void ShowConfirmation()
     {
+        currentAction = Action.Confirming;
         chooseTargetPanel.SetActive(true);
 
         foreach (Transform child in targetContainer)
             Destroy(child.gameObject);
-
         
         GameObject btnObj = Instantiate(targetButtonPrefab, targetContainer);
         TargetButton btn = btnObj.GetComponent<TargetButton>();
 
-        btn.Init(null, this, "Confirmar");
+        btn.Init(null, this, "Confirmar", "Q");
     }
 
     private void SelectAttack()
     {
-        Debug.Log("PULSADO EL ATAQUE");
-        btnCancelAbility.onClick.RemoveAllListeners();
-        
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(true);
         qtePanel.SetActive(false);
-
-        btnCancelAbility.onClick.AddListener(() => CancelAbility());
+        
+        currentAction = Action.SelectingEnemyTarget;
         ShowTargetSelection(GetEnemies());
     }
 
     private void SelectAbility(Ability a)
     {
-        btnCancelAbility.onClick.RemoveAllListeners();
-
         selectedAbility = a;
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(true);
         qtePanel.SetActive(false);
-        btnCancelAbility.onClick.AddListener(() => CancelAbility());
+        
         if (a.target == AttackTarget.EnemyTeam || a.target == AttackTarget.AllyTeam)
+        {
             ShowConfirmation();
+            currentAction = Action.Confirming;
+        }
         else if (a.target == AttackTarget.Ally)
+        {
             ShowTargetSelection(GetHeroes());
+            currentAction = Action.SelectingAllyTarget;
+        }
         else
+        {
             ShowTargetSelection(GetEnemies());
+            currentAction = Action.SelectingEnemyTarget;
+        }
     }
-
-    private List<Combatant> GetEnemies() => combatants.FindAll(c => c.GetTeam() == Team.Enemy);
-    private List<Combatant> GetHeroes() => combatants.FindAll(c => c.GetTeam() == Team.Hero);
 
     public void SelectTarget(Combatant c)
     {
+        if(selectedAbility != null)
+            combatants[currentIndex].abilityPoints -= selectedAbility.cost;
         selectedTargets.Add(c);
+        if(selectedTargets[0] == null)
+        {
+            selectedTargets = new List<Combatant>();
+            foreach(
+                Combatant comb in 
+                    selectedAbility.target == AttackTarget.AllyTeam ? GetHeroes() :
+                    selectedAbility.target == AttackTarget.EnemyTeam ? GetEnemies() :
+                    GetEnemies()
+                )
+                selectedTargets.Add(comb);
+        }
+        
         selectActionPanel.SetActive(false);
         chooseTargetPanel.SetActive(false);
+
         if(selectedAbility == null)
             StartCoroutine(ShowBasicAttack());
         else{
@@ -220,6 +448,7 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator ShowBasicAttack()
     {
+        currentAction = Action.Attacking;
         Combatant combatant = combatants[currentIndex];
         
         string actionText = combatant.name + " hace un ataque " +
@@ -241,41 +470,73 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator ShowAbilityAttack()
     {
+        currentAction = Action.Attacking;
         Combatant combatant = combatants[currentIndex];
 
-        string actionText = combatant.name + " usa " +
-                            selectedAbility.name + " contra " +
-                            (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los adversarios");
+        string actionText = "";
+        
+        if(selectedAbility.target == AttackTarget.Ally || selectedAbility.target == AttackTarget.AllyTeam)
+        {
+            actionText = combatant.name + " usa " +
+                         selectedAbility.name + " con " +
+                        (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los aliados");
+        }
+        else
+        {
+            actionText = combatant.name + " usa " +
+                         selectedAbility.name + " contra " +
+                        (selectedTargets.Count < 2 ? selectedTargets[0].name : "todos los adversarios");
+        }
         txtTurnTitle.text = actionText;
 
         float multiplier = 1f;
 
-        if (!combatant.isEnemy)
+        if (combatant.team != Team.Enemy)
         {
+            qteManager.SetModifiers(
+                combatant.HasEffect(Effect.Groove),
+                combatant.HasEffect(Effect.Extasis),
+                combatant.HasEffect(Effect.Microtone)
+            );
             qteManager.ShowBeats(selectedAbility.qtePattern);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
             Coroutine progressRoutine = qteManager.StartMoveProgressBar();
             yield return progressRoutine;
 
-            multiplier += qteManager.PerfectCount * 0.1f;
-            multiplier -= qteManager.MissCount * 0.1f;
+            multiplier += qteManager.PerfectCount * .1f;
+            multiplier -= qteManager.MissCount * .1f;
 
             combatant.abilityPoints += qteManager.PerfectCount / 2;
+
+            if(
+                qteManager.MissCount == 0 &&
+                qteManager.GoodCount == 0 &&
+                qteManager.PerfectCount != 0
+            )
+            {
+                combatant.abilityPoints++;
+                multiplier += .2f;
+                perfectComplete.Play();
+            }
 
             yield return new WaitForSeconds(0.5f);
         }
         else
         {
             qtePanel.SetActive(false);
+
+            if(combatant.HasEffect(Effect.Extasis))
+                multiplier *= 1.2f;
+
+            if(combatant.HasEffect(Effect.Microtone))
+                multiplier *= .8f;
+
             yield return new WaitForSeconds(2.5f);
         }
 
         foreach(Combatant c in selectedTargets)
             selectedAbility.Apply(combatant, c, multiplier);
-
-        selectedAbility = null;
-        selectedTargets = new List<Combatant>();
 
         if (!CheckBattleEnd())
             EndTurn();
@@ -285,35 +546,19 @@ public class TurnManager : MonoBehaviour
     {
         bool allEnemiesDead = true;
         foreach (Combatant c in combatants)
-        {
             if (c.team == Team.Enemy && !c.dead)
-            {
                 allEnemiesDead = false;
-                return false;
-            }
-        }
 
         if (allEnemiesDead)
-        {
-            txtTurnTitle.text = "Ganan los héroes";
-            return true;
-        }
+            battleManager.EndBattle(true);
 
         bool allHeroesDead = true;
         foreach (Combatant c in combatants)
-        {
             if (c.team == Team.Hero && !c.dead)
-            {
                 allHeroesDead = false;
-                return false;
-            }
-        }
 
         if (allHeroesDead)
-        {
-            txtTurnTitle.text = "Ganan los malos";
-            return true;
-        }
+            battleManager.EndBattle(false);
 
         return false;
     }
@@ -322,6 +567,7 @@ public class TurnManager : MonoBehaviour
     {
         combatants[currentIndex].EndTurn();
         currentIndex = (currentIndex + 1) % combatants.Count;
+        currentAction = Action.SelectingAbility;
         if(currentIndex != combatants.Count - 1)
             StartTurn();
         else
@@ -329,7 +575,77 @@ public class TurnManager : MonoBehaviour
 
     }
 
-    private Ability ChooseRandomAbility(Combatant enemy) => enemy.GetAbilities()[Random.Range(0, enemy.GetAbilities().Length)];
+    
+
+    private List<Combatant> GetEnemies() => combatants.FindAll(c => c.GetTeam() == Team.Enemy && !c.dead);
+    private List<Combatant> GetHeroes() => combatants.FindAll(c => c.GetTeam() == Team.Hero && !c.dead);
+
+    private Ability ChooseRandomAbility(Combatant enemy)
+    {
+        Ability[] abilities = enemy.GetAbilities();
+
+        List<Ability> usable = new List<Ability>();
+        foreach (Ability a in abilities)
+        {
+            if (enemy.abilityPoints >= a.cost)
+                usable.Add(a);
+        }
+
+        if (usable.Count == 0)
+            return null;
+
+        float totalCost = 0f;
+        foreach (Ability a in usable)
+            totalCost += a.cost;
+
+        float totalWeight = 0f;
+        foreach (Ability a in usable)
+            totalWeight += (totalCost - a.cost);
+
+        float randomValue = Random.Range(0f, totalWeight);
+
+        float cumulative = 0f;
+
+        foreach (Ability a in usable)
+        {
+            float weight = totalCost - a.cost;
+            cumulative += weight;
+
+            if (randomValue <= cumulative)
+                return a;
+        }
+
+        return usable[0];
+    }
+
+    private bool ShouldUseBasicAttack(Combatant enemy)
+    {
+        Ability[] abilities = enemy.GetAbilities();
+        bool canUseAny = false;
+
+        foreach (Ability a in abilities)
+        {
+            if (enemy.abilityPoints >= a.cost)
+            {
+                canUseAny = true;
+                break;
+            }
+        }
+
+        if (!canUseAny)
+            return true;
+
+        float basicChance;
+
+        if (enemy.abilityPoints <= 2)
+            basicChance = 0.6f;
+        else if (enemy.abilityPoints <= 4)
+            basicChance = 0.35f;
+        else
+            basicChance = 0.15f;
+
+        return Random.value < basicChance;
+    }
 
     private Combatant GetRandomHero() => GetHeroes()[Random.Range(0, GetHeroes().Count)];
     private Combatant GetRandomEnemy() => GetEnemies()[Random.Range(0, GetEnemies().Count)];

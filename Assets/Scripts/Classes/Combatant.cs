@@ -7,12 +7,9 @@ public class Combatant : MonoBehaviour
     public int maxHealth;
     public int health;
     public int strength;
-    public int chant;
     public int speed;
     public int initiative;
     public int abilityPoints;
-
-    public bool isEnemy;
     public bool dead = false;
 
     public Weapon weapon;
@@ -22,22 +19,50 @@ public class Combatant : MonoBehaviour
     public Ability[] abilities;
 
     private Dictionary<StatusEffect, int> effects = new Dictionary<StatusEffect, int>();
+    [SerializeField] private Transform cameraAnchor;
+
+    private float defaultAlpha = 1f;
+
+    public bool hasTurn = false;
+    [SerializeField] private GameObject render;
+    [SerializeField] private Light light;
+
+
+    public Transform GetCameraAnchor()
+    {
+        if (cameraAnchor == null)
+            return transform;
+
+        return cameraAnchor;
+    }
+
+    void Update()
+    {
+        foreach (KeyValuePair<StatusEffect, int> kvp in effects)
+        {
+            StatusEffect effect = kvp.Key;
+            int duration = kvp.Value;
+        }
+
+        light.color = dead ? Color.red : new Color(.5f, 1, 1, 0);
+        
+        light.intensity = hasTurn ? 5f : dead ? 5f : .5f;
+        render.GetComponent<Animator>().SetBool("Dead", dead);
+
+        if(abilityPoints > 9) abilityPoints = 9;
+        if(abilityPoints < 0) abilityPoints = 0;
+    }
+
 
     public void AddEffect(StatusEffect effect)
     {
         if (effects.ContainsKey(effect))
-        {
-            Debug.Log("effects[effect]: "+effects[effect]);
-            Debug.Log("effect.remainingTurns: "+effect.remainingTurns);
             effects[effect] = Mathf.Max(effects[effect], effect.remainingTurns);
-        }
         else
         {
             effects.Add(effect, effect.remainingTurns);
             
             var keys = new List<StatusEffect>(effects.Keys);
-            foreach (var e in keys)
-                Debug.Log("("+name+")"+e+": "+effects[e]);
         }
     }
 
@@ -57,14 +82,6 @@ public class Combatant : MonoBehaviour
                 effects.Remove(e);
         }
     }
-
-
-    // public int GetEffectTurns(StatusEffect effect)
-    // {
-    //     if (effects.Keys.ContainsKey(effect))
-    //         return effects[effect];
-    //     return 0;
-    // }
 
     public bool HasEffect(Effect effect)
     {
@@ -91,7 +108,6 @@ public class Combatant : MonoBehaviour
 
     public void AddHealth(int s) => health += s;
     public void AddStrength(int s) => strength += s; 
-    public void AddChant(int s) => chant += s; 
     public void AddSpeed(int s) => speed += s;
     public void AddInitiative(int s){
         initiative += s;
@@ -102,7 +118,6 @@ public class Combatant : MonoBehaviour
     public int GetMaxHealth() => maxHealth;
     public int GetHealth() => health;
     public int GetStrength() => strength;
-    public int GetChant() => chant;
     public int GetSpeed() => speed;
     public int GetInitiative() => initiative;
     public Team GetTeam() => team;
@@ -110,6 +125,5 @@ public class Combatant : MonoBehaviour
     public Ability GetAbility1() => abilities[0];
     public Ability GetAbility2() => abilities[1];
 
-    // Obtener todos los efectos activos
     public Dictionary<StatusEffect, int> GetEffects() => new Dictionary<StatusEffect, int>(effects);
 }

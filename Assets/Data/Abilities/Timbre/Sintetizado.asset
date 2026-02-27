@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Sintetizado
   m_EditorClassIdentifier: Assembly-CSharp::Ability
   name: Sintetizado
+  description: "Mucho da\xF1o de {ELEMENT}"
   damage: 20
   type: 0
   target: 0
   element: 3
   statusEffect: {fileID: 0}
-  qtePattern: {fileID: 0}
-  cost: 3
+  qtePattern: {fileID: 11400000, guid: d9c4bbf5c24ae3e43a832f2c5a7e87e0, type: 2}
+  cost: 6
