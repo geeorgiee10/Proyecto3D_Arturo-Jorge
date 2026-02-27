@@ -40,3 +40,23 @@ public class BattleStarter : MonoBehaviour
         gameObject.SetActive(!WorldData.Instance.IsEnemyDefeated(enemyId));
     }
 }
+
+
+/*
+
+AUSTIN      1       G
+PÁRSIFAL    2       M
+LULU        4       P
+SERGEY      8       B
+
+ANTONIO     1       G
+FARI        2       M
+PAQUIRRÍN   4       P
+CIGALA      8       B
+
+gMINION     16      G
+mMINION     32      M
+pMINION     64      P
+bMINION     128     G
+
+*/

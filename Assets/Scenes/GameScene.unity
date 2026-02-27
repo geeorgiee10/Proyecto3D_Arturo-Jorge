@@ -3647,6 +3647,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f188f67b7aabd0d45af1d8d37bf5c894, type: 3}
       insertIndex: -1
       addedObject: {fileID: 198581509}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f188f67b7aabd0d45af1d8d37bf5c894, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 198581511}
   m_SourcePrefab: {fileID: 100100000, guid: f188f67b7aabd0d45af1d8d37bf5c894, type: 3}
 --- !u!4 &198581503 stripped
 Transform:
@@ -3715,6 +3718,49 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0457314, y: 2.0736685, z: 1}
   m_Center: {x: -0.00981237, y: 1.0342627, z: -5.42977e-10}
+--- !u!114 &198581511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198581504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecca3c2002f8ebf47bbd8cc58017ce39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleStarter
+  enemyMask: 40
+  enemyId: cigala
+  enemyCombatants:
+  - slotIndex: 0
+    name: El Cigala
+    maxHealth: 200
+    health: 200
+    strength: 8
+    speed: 4
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: d3f2d8e256e2f484c81a701cb0f14a5e, type: 2}
+    element: 0
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: ad0e5967982034e4bb203d65ca90aaba, type: 2}
+    - {fileID: 11400000, guid: 25971e69327dcb847a9e55d22d30d11d, type: 2}
+  - slotIndex: 1
+    name: El Jairo
+    maxHealth: 175
+    health: 175
+    strength: 10
+    speed: 6
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: 06da51fe07888e84fa31d9f5221ec61e, type: 2}
+    element: 0
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: e135d9e76d715984eb1478d641aba82c, type: 2}
+    - {fileID: 11400000, guid: 0d3b41098bb39b347a68ef3afbaeea79, type: 2}
 --- !u!1 &201970335 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1686866358365567155, guid: de339d85e14094f7693e0dce24f5b320, type: 3}
@@ -9002,7 +9048,7 @@ MonoBehaviour:
     name: "Paquirr\xEDn"
     maxHealth: 175
     health: 175
-    strength: 3
+    strength: 4
     speed: 4
     initiative: 0
     abilityPoints: 3
@@ -9766,6 +9812,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7fc9d66c4585b3b44a99f3ef918c8d6f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 675320222}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7fc9d66c4585b3b44a99f3ef918c8d6f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 675320224}
     - targetCorrespondingSourceObject: {fileID: 1082271958561512970, guid: 7fc9d66c4585b3b44a99f3ef918c8d6f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 675320216}
@@ -9864,6 +9913,63 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.000274, y: 2.0641966, z: 1}
   m_Center: {x: -0.00013683637, y: 1.053485, z: 1.0243928e-12}
+--- !u!114 &675320224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675320213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecca3c2002f8ebf47bbd8cc58017ce39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleStarter
+  enemyMask: 97
+  enemyId: 
+  enemyCombatants:
+  - slotIndex: 0
+    name: Antonio Flores
+    maxHealth: 200
+    health: 200
+    strength: 6
+    speed: 6
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: 0ad795db622803749ba4a82f6f88a46c, type: 2}
+    element: 2
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: 0f11f282cc0286245bc80aeba136fc54, type: 2}
+    - {fileID: 11400000, guid: 3207b036d142c134394000f4f46ccb7f, type: 2}
+  - slotIndex: 1
+    name: El Christian
+    maxHealth: 150
+    health: 150
+    strength: 5
+    speed: 8
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: 06da51fe07888e84fa31d9f5221ec61e, type: 2}
+    element: 1
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: 0d3b41098bb39b347a68ef3afbaeea79, type: 2}
+    - {fileID: 11400000, guid: a32335c62a1377a45ba901cf3e7ae78d, type: 2}
+  - slotIndex: 2
+    name: El Johnny
+    maxHealth: 150
+    health: 150
+    strength: 4
+    speed: 10
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: b56b09e0d7c157c40b45cb6f24cd1635, type: 2}
+    element: 3
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: 3869b6d9e4c2b174f8bee115dc002fd1, type: 2}
+    - {fileID: 11400000, guid: c4691855a41e72840ba726420c283a12, type: 2}
 --- !u!1 &682478297
 GameObject:
   m_ObjectHideFlags: 0
@@ -22163,6 +22269,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7fa332178ad54664290126451780afc4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1523797805}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7fa332178ad54664290126451780afc4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1523797807}
   m_SourcePrefab: {fileID: 100100000, guid: 7fa332178ad54664290126451780afc4, type: 3}
 --- !u!1 &1523797799 stripped
 GameObject:
@@ -22231,6 +22340,63 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0363994, y: 1.8430902, z: 1}
   m_Center: {x: 0.000009801185, y: 0.8946515, z: -6.199827e-13}
+--- !u!114 &1523797807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523797799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecca3c2002f8ebf47bbd8cc58017ce39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleStarter
+  enemyMask: 146
+  enemyId: fariV1
+  enemyCombatants:
+  - slotIndex: 0
+    name: Fari
+    maxHealth: 250
+    health: 250
+    strength: 7
+    speed: 3
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: 23298f97927665e47a417fae6c51304d, type: 2}
+    element: 0
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: e135d9e76d715984eb1478d641aba82c, type: 2}
+    - {fileID: 11400000, guid: 0d3b41098bb39b347a68ef3afbaeea79, type: 2}
+  - slotIndex: 1
+    name: El Kevin
+    maxHealth: 175
+    health: 175
+    strength: 4
+    speed: 7
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: 8398e34fdbe78e543aea8bff9ddea9d8, type: 2}
+    element: 0
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: 00f0043e168bdd3489e220d596fecd5f, type: 2}
+    - {fileID: 11400000, guid: 3207b036d142c134394000f4f46ccb7f, type: 2}
+  - slotIndex: 2
+    name: El Brayan
+    maxHealth: 175
+    health: 175
+    strength: 4
+    speed: 7
+    initiative: 0
+    abilityPoints: 3
+    weapon: {fileID: 11400000, guid: b921b42262b948644b5d7e230a5f88a5, type: 2}
+    element: 0
+    team: 1
+    abilities:
+    - {fileID: 11400000, guid: 25971e69327dcb847a9e55d22d30d11d, type: 2}
+    - {fileID: 11400000, guid: 84ea8af19f0ebe54dbc4615ffdb78365, type: 2}
 --- !u!1 &1525914594 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2570353835627053982, guid: d84fef165871de449b201d71418260b4, type: 3}
@@ -24365,55 +24531,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6261959543247429531, guid: 7028a30082926d24f9168b77ffa645c0, type: 3}
---- !u!1 &1674771924
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1674771925}
-  - component: {fileID: 1674771926}
-  m_Layer: 0
-  m_Name: BattleData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1674771925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674771924}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1674771926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674771924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7734a86bce7f5484ebe2378feb77f4fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BattleData
-  alliedMask: 0
-  enemyMask: 0
-  enemyId: 
-  alliedData: []
-  enemyData: []
 --- !u!1 &1675979068 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6455349858388689636, guid: 43d33c55046b8e6498be1b030c29b239, type: 3}
@@ -31103,6 +31220,5 @@ SceneRoots:
   - {fileID: 1919680412}
   - {fileID: 858026682}
   - {fileID: 1163578846}
-  - {fileID: 1674771925}
   - {fileID: 186116126}
   - {fileID: 1154508257}

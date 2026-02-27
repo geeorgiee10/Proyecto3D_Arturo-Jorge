@@ -6,7 +6,7 @@ public class PlayerParty : MonoBehaviour
     public static PlayerParty Instance;
     [SerializeField] private RescuedCharacterData resCharData;
 
-    public int partyMask;
+    public int partyMask = 1;
     public List<CombatantData> partyMembers;
     public CharacterBagDisplayUI[] displays;
 
@@ -62,13 +62,22 @@ public class PlayerParty : MonoBehaviour
         foreach(string completedEvent in WorldData.Instance.completedEvents)
         {            
             if(completedEvent == "paquirrín")
+            {
                 AddCharacter(resCharData.rescuableCombatants[2]);
+                partyMask += 2;
+            }
 
             if(completedEvent == "cigala")
+            {
                 AddCharacter(resCharData.rescuableCombatants[1]);
+                partyMask += 1;
+            }
 
             if(completedEvent == "fariV1")
+            {
                 AddCharacter(resCharData.rescuableCombatants[0]);
+                partyMask += 0;
+            }
         }
 
         foreach(CombatantData cd in partyMembers)
@@ -86,27 +95,20 @@ public class PlayerParty : MonoBehaviour
         if (cd == null)
             return false;
 
-        // 1️⃣ ¿Ya la tiene?
         for (int i = 0; i < cd.abilities.Length; i++)
-        {
             if (cd.abilities[i] == ability)
             {
-                cd.abilities[i] = null; // Desequipar
+                cd.abilities[i] = null;
                 return true;
             }
-        }
 
-        // 2️⃣ Buscar hueco libre
         for (int i = 0; i < cd.abilities.Length; i++)
-        {
             if (cd.abilities[i] == null)
             {
-                cd.abilities[i] = ability; // Equipar
+                cd.abilities[i] = ability;
                 return true;
             }
-        }
 
-        // 3️⃣ No hay espacio
         return false;
     }
 }
